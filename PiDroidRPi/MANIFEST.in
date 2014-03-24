@@ -1,0 +1,2 @@
+include source/pidroid.h
+include source/jpeglib.h

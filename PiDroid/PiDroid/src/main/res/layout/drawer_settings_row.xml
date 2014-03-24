@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--  -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp">
+
+    <!--  -->
+    <SeekBar
+        android:id="@+id/settingsSeekBar"
+        android:layout_height="wrap_content"
+        android:layout_width="140dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:focusable="false" />
+
+    <!--  -->
+    <TextView
+        android:id="@+id/settingsTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/settingsSeekBar"
+        android:textColor="#ff30dbf7"
+        android:typeface="serif"
+        android:textSize="15sp"
+        android:gravity="right"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="20dp" />
+
+    <!--  -->
+    <View
+        android:id="@+id/settingsDivider"
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_alignParentBottom="true"
+        android:background="#ff4b4949" />
+
+</RelativeLayout>

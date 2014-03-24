@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PiDroid</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_controller">PiDroid Controller</string>
+
+
+    <!-- Navigation Drawer Items -->
+    <string-array name="drawer_items_list">
+        <!-- header item -->
+        <item>0,CONTROLS</item>
+
+        <!-- row item -->
+        <item>1,Touch and Gyro</item>
+
+        <!-- row item -->
+        <item>1,Sliders and Gyro</item>
+
+        <!-- row item -->
+        <item>1,Joysticks</item>
+
+        <!-- header -->
+        <item>0,SETTINGS</item>
+
+        <!-- settings row item -->
+        <item>2,Maximum tilt angle</item>
+
+        <!-- settings row item -->
+        <item>2,Acceleration time</item>
+
+        <!-- settings row item -->
+        <item>2,Deceleration time</item>
+
+        <!-- settings row item -->
+        <item>2,Touch responsiveness</item>
+
+        <!-- header -->
+        <item>0,ROVER</item>
+
+        <!-- settings row item -->
+        <item>2,Turn sensitivity</item>
+
+        <!-- settings row item -->
+        <item>1,Learn new object</item>
+
+        <!-- settings row item -->
+        <item>1,Recognise object</item>
+
+        <!-- settings row item -->
+        <item>1,Clear learning data</item>
+
+        <!-- header -->
+        <item>0,MISC</item>
+
+        <!-- row item -->
+        <item>1,Camera stabilisation</item>
+
+        <!-- row item -->
+        <item>1,Change HUD</item>
+
+        <!-- row item -->
+        <item>1,Level indicator</item>
+
+        <!-- row item -->
+        <item>1,Tutorials</item>
+    </string-array>
+
+
+    <!-- A list of objects PiDroid will attempt to recognise -->
+    <string-array name="object_names">
+        <item>Triangle</item>
+        <item>Square</item>
+        <item>Pentagon</item>
+        <item>Star</item>
+    </string-array>
+
+</resources>

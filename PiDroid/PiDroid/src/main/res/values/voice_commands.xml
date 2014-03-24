@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Voice Commands used to drive PiDroid -->
+
+    <!-- Forward Commands -->
+    <string-array name="forward_commands">
+        <item>forwards</item>
+        <item>forward</item>
+        <item>go forwards</item>
+        <item>go forward</item>
+        <item>go</item>
+        <item>accelerate</item>
+        <item>start</item>
+    </string-array>
+
+    <!-- Backward Commands -->
+    <string-array name="backward_commands">
+        <item>backward</item>
+        <item>backwards</item>
+        <item>go backwards</item>
+        <item>go backward</item>
+        <item>reverse</item>
+        <item>back</item>
+    </string-array>
+
+    <!-- Turn Left Commands -->
+    <string-array name="turn_left_commands">
+        <item>left</item>
+        <item>turn left</item>
+        <item>steer left</item>
+        <item>go left</item>
+    </string-array>
+
+    <!-- Turn Right Commands -->
+    <string-array name="turn_right_commands">
+        <item>right</item>
+        <item>turn right</item>
+        <item>steer right</item>
+        <item>go right</item>
+    </string-array>
+
+    <!-- Camera Up Commands -->
+    <string-array name="camera_up_commands">
+        <item>camera up</item>
+        <item>look up</item>
+        <item>up</item>
+    </string-array>
+
+    <!-- Camera Down Commands -->
+    <string-array name="camera_down_commands">
+        <item>camera down</item>
+        <item>look down</item>
+        <item>down</item>
+    </string-array>
+
+    <!-- Camera Left Commands -->
+    <string-array name="camera_left_commands">
+        <item>camera left</item>
+        <item>look left</item>
+    </string-array>
+
+    <!-- Camera Right Commands -->
+    <string-array name="camera_right_commands">
+        <item>camera right</item>
+        <item>look right</item>
+    </string-array>
+
+    <!-- Stop/Reset Commands -->
+    <string-array name="stop_reset_commands">
+        <item>stop</item>
+        <item>halt</item>
+        <item>wait</item>
+        <item>dont</item>
+        <item>no</item>
+        <item>why</item>
+    </string-array>
+
+    <!-- Object Recognition Commands -->
+    <string-array name="object_recognition_commands">
+        <item>learn</item>
+        <item>learn this item</item>
+        <item>scan</item>
+        <item>what is this</item>
+        <item>this is a</item>
+        <item>this is</item>
+    </string-array>
+
+</resources>
