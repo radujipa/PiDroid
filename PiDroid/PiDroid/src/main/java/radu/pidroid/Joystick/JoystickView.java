@@ -1,3 +1,11 @@
+/*
+  JoystickView.java
+
+  Copyright (C) 2015 Radu Traian Jipa
+  License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+*/
+
+
 package radu.pidroid.Joystick;
 
 import android.content.Context;
@@ -5,15 +13,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-
-import java.util.jar.Attributes;
 
 import radu.pidroid.R;
 

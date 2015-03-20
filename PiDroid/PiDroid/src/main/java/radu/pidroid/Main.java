@@ -1,10 +1,18 @@
+/*
+  Main.java
+
+  Copyright (C) 2015 Radu Traian Jipa
+  License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+*/
+
+
 package radu.pidroid;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;

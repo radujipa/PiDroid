@@ -1,3 +1,12 @@
+/*
+  Code taken and adapted from:
+  SimpleMjpegView: https://bitbucket.org/neuralassembly/simplemjpegview/src/6f7977956109475ad9d932db3a70fd0e52d20fb6/src/com/camera/simplemjpeg/MjpegView.java?at=master
+
+  Documentation:
+  Canvas and Drawables: http://developer.android.com/guide/topics/graphics/2d-graphics.html
+*/
+
+
 package radu.pidroid.MjpegViewer;
 
 import android.content.Context;
@@ -9,33 +18,14 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-
 import java.io.IOException;
-import java.net.URI;
 
 
-/*
-    Code taken and adapted from:
-
-    https://bitbucket.org/neuralassembly/simplemjpegview/src/6f7977956109475ad9d932db3a70fd0e52d20fb6/src/com/camera/simplemjpeg/MjpegView.java?at=master
-
-
-    Documentation:
-
-    Canvas and Drawables: http://developer.android.com/guide/topics/graphics/2d-graphics.html
-*/
 public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
 
     SurfaceHolder holder;

@@ -1,12 +1,19 @@
+/*
+  recogniser.c
+
+  Copyright (C) 2015 Radu Traian Jipa
+  License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+*/
+
 
 #include <Python.h>     // functions to be called by Python
 
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <opencv/cv.h>				// 
-#include <opencv/highgui.h>		// 
-#include <math.h>							// 
+#include <opencv/cv.h>				//
+#include <opencv/highgui.h>		//
+#include <math.h>							//
 
 #include "pidroid.h"
 
@@ -21,7 +28,7 @@ int number_of_objects ;
 int port ;
 
 
-/*  
+/*
  *
  */
 void decode_image (int objIndex, int imgIndex,
@@ -30,11 +37,11 @@ void decode_image (int objIndex, int imgIndex,
 	//
 	char filename[50] ;
 	sprintf (filename, "learning/obj%d/img%04d.jpg", objIndex, imgIndex) ;
-	
+
 	int width, height, alpha = -1 ;
 	int num_of_pixels = STILLS_HEIGHT * STILLS_WIDTH * 3 ;
 	unsigned char pixels[num_of_pixels] ;
-	
+
 	//
 	if (jpegread (filename, alpha, &width, &height, pixels) != 0)
 	{
@@ -54,7 +61,7 @@ void decode_image (int objIndex, int imgIndex,
 	{
 		int row = STILLS_HEIGHT - 1 - pixelIndex / (3 * STILLS_WIDTH) ;
 		int col = (pixelIndex / 3) % STILLS_WIDTH ;
-		
+
 		decoded_image[row][col] = 0.2126 * pixels[pixelIndex + 0]    // R
 														+ 0.7152 * pixels[pixelIndex + 1]		 // G
 														+ 0.0722 * pixels[pixelIndex + 2] ;	 // B
@@ -62,7 +69,7 @@ void decode_image (int objIndex, int imgIndex,
 } // decode_image
 
 
-/*  
+/*
  *
  */
 void extract_features (int frames, int objIndex, int objType)
@@ -84,13 +91,13 @@ void extract_features (int frames, int objIndex, int objType)
 	unsigned char image[STILLS_HEIGHT][STILLS_WIDTH] ;
 
 	for (int imgIndex = 1; imgIndex <= 1/*frames*/; imgIndex++)
-	{		
+	{
 		// Here we decode the JPEG previously taken and extract the grayscale
 		//decode_image (objIndex, imgIndex, image) ;
-		
+
 		char filename[50] ;
 		sprintf (filename, "learning/obj%d/img%04d.jpg", objIndex, imgIndex) ;
-	
+
 		IplImage *image = cvLoadImage ("/home/radu/image.jpg", CV_LOAD_IMAGE_COLOR) ;
 		cvNamedWindow ("my jpg", CV_WINDOW_NORMAL) ;
 		cvShowImage ("my jpg", image) ;
@@ -111,11 +118,11 @@ void extract_features (int frames, int objIndex, int objType)
 
 
 /*
- * 
+ *
  ******************************************************************************
  */
 static PyObject* setup (PyObject *self, PyObject *args)
-{  
+{
 	//
   PyArg_ParseTuple (args, "i", &port) ;
 
@@ -123,7 +130,7 @@ static PyObject* setup (PyObject *self, PyObject *args)
 	if (DEBUG == TRUE)
 	{
 		printf ("RECOGNISER:\n setup():\n") ;
-		printf ("   port: %d\n\n", port) ;	
+		printf ("   port: %d\n\n", port) ;
 	} // if
 
   // A function that returns "void" for python
@@ -133,7 +140,7 @@ static PyObject* setup (PyObject *self, PyObject *args)
 
 
 /*
- * 
+ *
  ******************************************************************************
  */
 static PyObject* learnNewObject (PyObject *self, PyObject *args)
@@ -177,7 +184,7 @@ static PyObject* learnNewObject (PyObject *self, PyObject *args)
  */
 static PyMethodDef recogniser_methods[] = {
 	{"setup",   	  			setup,						METH_VARARGS},
-	{"learnNewObject",		learnNewObject, 	METH_VARARGS}	
+	{"learnNewObject",		learnNewObject, 	METH_VARARGS}
 } ; // recogniser_methods
 
 
@@ -186,6 +193,6 @@ static PyMethodDef recogniser_methods[] = {
  ******************************************************************************
  */
 void initrecogniser ()
-{  
+{
   (void) Py_InitModule("recogniser", recogniser_methods) ;
 } // initRecogniser

@@ -1,5 +1,10 @@
-package radu.pidroid.Connector;
+/*
+  Code taken and adapted from:
+  http://myandroidsolutions.blogspot.co.uk/2012/07/android-tcp-connection-tutorial.html
+*/
 
+
+package radu.pidroid.Connector;
 
 import android.util.Log;
 
@@ -11,11 +16,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
-/*
-    Code taken and adapted from:
 
-    http://myandroidsolutions.blogspot.co.uk/2012/07/android-tcp-connection-tutorial.html
- */
 public class TCPClient {
 
     public static String  SERVER_IP;

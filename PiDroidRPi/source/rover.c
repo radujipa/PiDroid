@@ -1,3 +1,10 @@
+/*
+  rover.c
+
+  Copyright (C) 2015 Radu Traian Jipa
+  License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+*/
+
 
 #include <Python.h>     // functions to be called by Python
 
@@ -40,7 +47,7 @@ int roverTurnAngle = 90 ;
 int turnSensitivity = 1 ;
 
 
-/* 
+/*
  *  WiringPi specific
  *      Sets four GPIOs to be digital outputs and
  *      four GPIOs to generate software PWM
@@ -57,7 +64,7 @@ void roverSetup (void)
   pinMode (motor_dir[2], OUTPUT) ;
   pinMode (motor_dir[3], OUTPUT) ;
   pinMode (motor_dir[4], OUTPUT) ;
-  
+
   // Create and initialise the Software Pulse-Width Modulation pins
   softPwmCreate (motor_pwm[1], 0, 100) ;
   softPwmCreate (motor_pwm[2], 0, 100) ;
@@ -66,29 +73,29 @@ void roverSetup (void)
 } // roverSetup
 
 
-/* 
+/*
  *  WiringPi specific
  *    Sets the left wheels/track to FORWARDS direction
  */
 void roverLeftDirectionForwards (void)
 {
   digitalWrite (motor_dir[1], 1) ;
-  digitalWrite (motor_dir[2], 0) ;  
+  digitalWrite (motor_dir[2], 0) ;
 } // roverLeftDirectionForwards
 
 
-/* 
+/*
  *  WiringPi specific
  *      Sets the right wheels/track to FORWARDS direction
  */
 void roverRightDirectionForwards (void)
 {
   digitalWrite (motor_dir[3], 1) ;
-  digitalWrite (motor_dir[4], 0) ; 
+  digitalWrite (motor_dir[4], 0) ;
 } // roverRightDirectionForwards
 
 
-/* 
+/*
  *  WiringPi specific
  *      Sets the left wheels/track to BACKWARDS direction
  */
@@ -99,20 +106,20 @@ void roverLeftDirectionBackwards (void)
 } // roverLeftDirectionBackwards
 
 
-/* 
+/*
  *  WiringPi specific
  *      Sets the right wheels/track to BACKWARDS direction
  */
 void roverRightDirectionBackwards (void)
 {
   digitalWrite (motor_dir[3], 0) ;
-  digitalWrite (motor_dir[4], 1) ; 
+  digitalWrite (motor_dir[4], 1) ;
 } // roverRightDirectionBackwards
 
 
 /*
  *  WiringPi specific
- *      Sets the left wheels/track speed 
+ *      Sets the left wheels/track speed
  *      NOTE: the speed may be negative, so set the absolute value
  */
 void roverLeftSpeed (int speedToSet)
@@ -124,7 +131,7 @@ void roverLeftSpeed (int speedToSet)
 
 /*
  *  WiringPi specific
- *      Sets the right wheels/track speed 
+ *      Sets the right wheels/track speed
  *      NOTE: the speed may be negative, so set the absolute value
  */
 void roverRightSpeed (int speedToSet)
@@ -142,8 +149,8 @@ void roverRightSpeed (int speedToSet)
 void roverUpdateLeftRightSpeed (void)
 {
 	//
-  int innerWheelsSpeed = abs (roverSpeed) * sin (roverTurnAngle * PI / 180) / turnSensitivity ;  
-  
+  int innerWheelsSpeed = abs (roverSpeed) * sin (roverTurnAngle * PI / 180) / turnSensitivity ;
+
   //
   if (roverTurnAngle > 90)  // Turning LEFT
   {
@@ -187,7 +194,7 @@ void roverUpdateLeftRightSpeed (void)
 
 /*
  * C Extension for Python
- *    This function sets up the ROVER 
+ *    This function sets up the ROVER
  *
  *    It reads the configuration file, pidroid.conf, and gets the
  *    direction and PWM pins the motors have been connected to.
@@ -197,33 +204,33 @@ void roverUpdateLeftRightSpeed (void)
  ******************************************************************************
  */
 static PyObject* setup (PyObject *self, PyObject *args)
-{  
+{
   FILE *configFile = fopen ("pidroid.conf", "r") ;
   char buffer[100] ;
   int index = 0, pin ;
-  
-  // Read line by line from the config file until the end 
+
+  // Read line by line from the config file until the end
   while (fgets (buffer, sizeof (buffer), configFile) != NULL)
   {
     // Keep reading lines until you reach the BEGINING of a block
     // i.e. ignores comment lines
     while (strcmp (buffer, "begin\n") != 0)
       fgets (buffer, sizeof (buffer), configFile) ;
-    
+
     index++ ;
 
     // Keep reading lines until you reach the END of the block
     while (strcmp (buffer, "end") != 0)
     {
       fscanf (configFile, "%s %d", buffer, &pin) ;
-      
+
       // The PWM pin is set here
       if (strcmp (buffer, "pwm") == 0)
         motor_pwm[index] = pin ;
       else
       // The direction pin is set here
       if (strcmp (buffer, "dir") == 0)
-        motor_dir[index] = pin ;      
+        motor_dir[index] = pin ;
     } // while
   } // while
   fclose (configFile) ;
@@ -239,7 +246,7 @@ static PyObject* setup (PyObject *self, PyObject *args)
     printf ("   roverTurnAngle: %d\n", roverTurnAngle) ;
     printf ("   roverSpeed: %d\n", roverSpeed) ;
     printf ("   roverDirection: %d\n", roverDirection) ;
-    printf ("   turnSensitivity: %d\n\n", turnSensitivity) ;    
+    printf ("   turnSensitivity: %d\n\n", turnSensitivity) ;
   } // if
 
   // Build a tuple and return it back to the Python Controller
@@ -263,12 +270,12 @@ static PyObject* setTurnAngle (PyObject *self, PyObject *args)
   // Parse the tuple arguments from python
   int turnAngleToSet ;
 
-  PyArg_ParseTuple (args, "((iiiiiiiiiiii)(i))", 
+  PyArg_ParseTuple (args, "((iiiiiiiiiiii)(i))",
     &motor_pwm[1], &motor_pwm[2], &motor_pwm[3], &motor_pwm[4],
     &motor_dir[1], &motor_dir[2], &motor_dir[3], &motor_dir[4],
     &roverSpeed, &roverDirection, &roverTurnAngle, &turnSensitivity,
-    &turnAngleToSet) ; 
-  
+    &turnAngleToSet) ;
+
   // Set the new turn angle ad update the speeds
   roverTurnAngle = turnAngleToSet ;
   roverUpdateLeftRightSpeed () ;
@@ -284,7 +291,7 @@ static PyObject* setTurnAngle (PyObject *self, PyObject *args)
     printf ("   turnSensitivity: %d\n", turnSensitivity) ;
     printf ("   turnAngleToSet: %d\n\n", turnAngleToSet) ;
   } // if
-  
+
   // Build a tuple and return it back to the Python Controller
   return Py_BuildValue ("(iiiiiiiiiiii)",
     motor_pwm[1], motor_pwm[2], motor_pwm[3], motor_pwm[4],
@@ -298,7 +305,7 @@ static PyObject* setTurnAngle (PyObject *self, PyObject *args)
  *    This function sets the SPEED of the ROVER
  *
  *    The SPEED is an integer in the interval [-100, 100].
- *    A negative speed implies BACKWARDS direction whilst 
+ *    A negative speed implies BACKWARDS direction whilst
  *    a positive speed implies FORWARDS direction.
  *
  *    If the SPIN option is toggled, then positive speed triggers
@@ -310,13 +317,13 @@ static PyObject* setSpeed (PyObject *self, PyObject *args)
   // Parse the tuple arguments from python
   int speedToSet ;
 
-  PyArg_ParseTuple (args, "((iiiiiiiiiiii)(i))", 
+  PyArg_ParseTuple (args, "((iiiiiiiiiiii)(i))",
     &motor_pwm[1], &motor_pwm[2], &motor_pwm[3], &motor_pwm[4],
     &motor_dir[1], &motor_dir[2], &motor_dir[3], &motor_dir[4],
     &roverSpeed, &roverDirection, &roverTurnAngle, &turnSensitivity,
     &speedToSet) ;
-  
-  // Check the new speed against the old one to verify any direction 
+
+  // Check the new speed against the old one to verify any direction
   // change whilst taking into account the SPIN toggle.
   if (speedToSet > 0)
   {
@@ -349,7 +356,7 @@ static PyObject* setSpeed (PyObject *self, PyObject *args)
       roverRightDirectionForwards () ;
     } // if
   } // if
-  
+
   // Set the new speed and update the ROVER speeds
   roverSpeed = speedToSet ;
   roverUpdateLeftRightSpeed () ;
@@ -388,12 +395,12 @@ static PyObject* setTurnSensitivity (PyObject *self, PyObject *args)
   // Parse the tuple arguments from python
   int turnSensitivityToSet ;
 
-  PyArg_ParseTuple (args, "((iiiiiiiiiiii)(i))", 
+  PyArg_ParseTuple (args, "((iiiiiiiiiiii)(i))",
     &motor_pwm[1], &motor_pwm[2], &motor_pwm[3], &motor_pwm[4],
     &motor_dir[1], &motor_dir[2], &motor_dir[3], &motor_dir[4],
     &roverSpeed, &roverDirection, &roverTurnAngle, &turnSensitivity,
     &turnSensitivityToSet) ;
-  
+
   // Set the new sensitivity; nothing more to update
   turnSensitivity = turnSensitivityToSet ;
 
@@ -431,12 +438,12 @@ static PyObject* toggleSpin (PyObject *self, PyObject *args)
   // Parse the tuple arguments from python
   int spinToSet ;
 
-  PyArg_ParseTuple (args, "((iiiiiiiiiiii)(i))", 
+  PyArg_ParseTuple (args, "((iiiiiiiiiiii)(i))",
     &motor_pwm[1], &motor_pwm[2], &motor_pwm[3], &motor_pwm[4],
     &motor_dir[1], &motor_dir[2], &motor_dir[3], &motor_dir[4],
     &roverSpeed, &roverDirection, &roverTurnAngle, &turnSensitivity,
     &spinToSet) ;
-  
+
   // Here we toggle SPIN on/off; when off, set the direction.. FORWARDS
   if (spinToSet == TRUE)
     roverDirection = ROVER_SPIN ;
@@ -472,7 +479,7 @@ static PyMethodDef rover_methods[] = {
   {"setTurnAngle",        setTurnAngle,         METH_VARARGS},
   {"setSpeed",            setSpeed,             METH_VARARGS},
   {"setTurnSensitivity",  setTurnSensitivity,   METH_VARARGS},
-  {"toggleSpin",          toggleSpin,           METH_VARARGS}  
+  {"toggleSpin",          toggleSpin,           METH_VARARGS}
 } ; // Rover_methods
 
 
@@ -481,6 +488,6 @@ static PyMethodDef rover_methods[] = {
  ******************************************************************************
  */
 void initrover ()
-{  
+{
   (void) Py_InitModule("rover", rover_methods) ;
 } // initRover

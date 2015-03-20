@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+
+# Controllers.py
+#
+# Copyright (C) 2015 Radu Traian Jipa
+# License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+#
+
 
 """
 ---------------------------------------------------------
@@ -20,13 +28,13 @@ class RoverController:
 	def __init__(self):
 		self.configuration = rover.setup()
 		self.DEBUG = True
-		
+
 
 	# args = (turnAngleToSet)
 	def setTurnAngle(self, args):
 
 		if self.DEBUG:
-			print "ROVER CONTROLLER:\n setTurnAngle():\n", 
+			print "ROVER CONTROLLER:\n setTurnAngle():\n",
 			print "   configuration: ", self.configuration
 			print "   args", args, "\n"
 
@@ -38,7 +46,7 @@ class RoverController:
 	def setSpeed(self, args):
 
 		if self.DEBUG:
-			print "ROVER CONTROLLER:\n setSpeed():\n", 
+			print "ROVER CONTROLLER:\n setSpeed():\n",
 			print "   configuration: ", self.configuration
 			print "   args", args, "\n"
 
@@ -50,7 +58,7 @@ class RoverController:
 	def setTurnSensitivity(self, args):
 
 		if self.DEBUG:
-			print "ROVER CONTROLLER:\n setTurnSensitivity():\n", 
+			print "ROVER CONTROLLER:\n setTurnSensitivity():\n",
 			print "   configuration: ", self.configuration
 			print "   args", args, "\n"
 
@@ -62,7 +70,7 @@ class RoverController:
 	def toggleSpin(self, args):
 
 		if self.DEBUG:
-			print "ROVER CONTROLLER:\n toggleSpin():\n", 
+			print "ROVER CONTROLLER:\n toggleSpin():\n",
 			print "   configuration: ", self.configuration
 			print "   args", args, "\n"
 
@@ -99,7 +107,7 @@ class CameraController:
 		#
 		self.position = camera.setPosition((self.position, args))
 
-	
+
 	# a list of the functions in this controller
 	functionList = [setPosition]
 
@@ -111,8 +119,8 @@ class RecogniserController:
 
 	def __init__(self, port):
 		self.PATH = 'learning'
-		self.DEBUG = True		
- 
+		self.DEBUG = True
+
 
 	#
 	def clearLearningData(self, args):
@@ -122,7 +130,7 @@ class RecogniserController:
 		objects = os.listdir(self.PATH)
 
 		for object in objects:
-			
+
 			# get the file names in each object folder
 			# these will either be imgXXXX or features.data
 			files = os.listdir(self.PATH + '/' + object)
@@ -148,7 +156,7 @@ class RecogniserController:
 
 		# Take JPEG images of the new object
 		camera.startRaspiStill(path, frames)
-		
+
 		# Now that we've taken the images, let's start the stream again
 		camera.startMjpegStreamer()
 
@@ -227,10 +235,10 @@ class RecogniserController:
 				if self.DEBUG:
 					print "RECOGNISER CONTROLLER:\n recogniseObject():"
 					print "   objects: ", objects
-					print "   featuresToMatch: ", featuresToMatch			
+					print "   featuresToMatch: ", featuresToMatch
 					print "   result: ", objFeatures[0], "\n"
 
-				# Success! PiDroid has recognised an object!				
+				# Success! PiDroid has recognised an object!
 				#return "2,1," + str(objFeatures[0])
 				result = objFeatures[0]
 
@@ -267,12 +275,12 @@ class RecogniserController:
 		# Harris Corner detector
 		#corner_map = cv2.cornerHarris(threshold_image, blockSize, apertureSize, k)
 		corner_map = cv2.cornerHarris(gray, blockSize, apertureSize, k)
-		
+
 		# experiment with threshold to get the right no of corners
 		# fragile threshold .. careful changing this value!
 		threshold = 0.001 * corner_map.max()
 		corners = 0
-		
+
 		# Convolution: when a corner has been found, do a local maximum
 		# to filter other close by corners which can be approximated to
 		# a single interesting one

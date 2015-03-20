@@ -1,6 +1,15 @@
+/*
+  Controller.java
+
+  Copyright (C) 2015 Radu Traian Jipa
+  License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+*/
+
+
 package radu.pidroid;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -14,7 +23,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
 import android.speech.RecognizerIntent;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;

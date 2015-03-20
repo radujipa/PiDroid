@@ -1,18 +1,22 @@
+/*
+  CommandRecogniser.java
+
+  Copyright (C) 2015 Radu Traian Jipa
+  License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+*/
+
+
 package radu.pidroid.Recogniser;
 
-
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import radu.pidroid.Connector.PiDroidMessenger;
 import radu.pidroid.MjpegViewer.MjpegView;
 import radu.pidroid.R;
+
 
 public class CommandRecogniser {
 

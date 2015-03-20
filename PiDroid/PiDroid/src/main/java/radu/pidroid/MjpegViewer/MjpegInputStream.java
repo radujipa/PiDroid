@@ -1,3 +1,9 @@
+/*
+  Code taken from:
+  SimpleMjpegView: https://bitbucket.org/neuralassembly/simplemjpegview/src/6f7977956109475ad9d932db3a70fd0e52d20fb6/src/com/camera/simplemjpeg/MjpegInputStream.java?at=master
+*/
+
+
 package radu.pidroid.MjpegViewer;
 
 import android.graphics.Bitmap;
@@ -13,12 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Properties;
 
-/*
-    Code taken from:
 
-    https://bitbucket.org/neuralassembly/simplemjpegview/src/6f7977956109475ad9d932db3a70fd0e52d20fb6/src/com/camera/simplemjpeg/MjpegInputStream.java?at=master
-
- */
 public class MjpegInputStream extends DataInputStream {
     private final byte[] SOI_MARKER = { (byte) 0xFF, (byte) 0xD8 };
     private final byte[] EOF_MARKER = { (byte) 0xFF, (byte) 0xD9 };

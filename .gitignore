@@ -1,0 +1,10 @@
+# Android Studio
+PiDroid/.gradle
+PiDroid/.idea
+PiDroid/local.properties
+
+# Java class files
+*.class
+
+# Mac OS specific
+.DS_Store

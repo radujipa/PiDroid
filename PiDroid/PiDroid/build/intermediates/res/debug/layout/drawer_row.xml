@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--  -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp">
+
+    <!--  -->
+    <ImageView
+        android:id="@+id/rowIconImageView"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp" />
+
+    <!--  -->
+    <TextView
+        android:id="@+id/rowTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/rowIconImageView"
+        android:textColor="#ffd8ccd9"
+        android:textSize="15sp"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="10dp"/>
+
+    <!--  -->
+    <View
+        android:id="@+id/rowDivider"
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_alignParentBottom="true"
+        android:background="#ff4b4949" />
+
+</RelativeLayout><!-- From: file:/Users/radu/Projects/PiDroid/PiDroid/PiDroid/src/main/res/layout/drawer_row.xml -->

@@ -1,3 +1,11 @@
+/*
+  DrawerItem.java
+
+  Copyright (C) 2015 Radu Traian Jipa
+  License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+*/
+
+
 package radu.pidroid.SettingsDrawer;
 
 import android.content.Context;

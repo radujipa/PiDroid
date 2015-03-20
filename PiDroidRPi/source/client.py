@@ -1,7 +1,8 @@
 """
-
-IRC client exemplar.
-
+Code taken and adapted from:
+The University of Manchester Computer Science
+COMP18111 - Lab Exercise 3
+version: 2011/2012
 """
 
 import sys
@@ -33,7 +34,7 @@ client.start(ip, port)
 
 while client.isRunning():
 	try:
-		command = raw_input("> ").strip()		
+		command = raw_input("> ").strip()
 		# *** process input from the user in a loop here ***
 		# *** use client.send(someMessage) to send messages to the server
 		client.send(command)

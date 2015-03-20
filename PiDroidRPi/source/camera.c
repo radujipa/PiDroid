@@ -1,3 +1,10 @@
+/*
+  camera.c
+
+  Copyright (C) 2015 Radu Traian Jipa
+  License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+*/
+
 
 #include <Python.h>     // functions to be called by Python
 
@@ -14,14 +21,14 @@ static Boolean DEBUG = TRUE ;
 
 // Camera position (X,Y) - these will be used to move the servos
 // Pins: camera_pwm[0] = X pin, camera_pwm[1] = Y pin
-int camera_pwm[2] ; 
+int camera_pwm[2] ;
 int cameraX = 0, cameraY = 0 ;
 
 // Starting and stoping MJPEG-STREAMER requires the port
 int port ;
 
 
-/*  
+/*
  *  ServoBlaster specific
  *      Writes to the servoblaster daemon with the corresponding "API".
  *      The values to be set also need to be remmaped to a smalled interval
@@ -68,19 +75,19 @@ static PyObject* setup (PyObject *self, PyObject *args)
   int pin ;
 
 
-  // Read line by line from the config file until the end 
+  // Read line by line from the config file until the end
   while (fgets (buffer, sizeof (buffer), configFile) != NULL)
   {
     // Keep reading lines until you reach the BEGINING of a block
     // i.e. ignores comment lines
     while (strcmp (buffer, "begin\n") != 0)
       fgets (buffer, sizeof (buffer), configFile) ;
-      
+
     // Keep reading lines until you reach the END of the block
     while (strcmp (buffer, "end") != 0)
     {
       fscanf (configFile, "%s %d", buffer, &pin) ;
-      
+
       // Here the PWM pin for PAN is set
       if (strcmp (buffer, "pwmX") == 0)
         camera_pwm[0] = pin ;
@@ -98,7 +105,7 @@ static PyObject* setup (PyObject *self, PyObject *args)
     printf ("   pwm: %d, %d\n", camera_pwm[0], camera_pwm[1]) ;
     printf ("   cameraX: %d, cameraY: %d\n", cameraX, cameraY) ;
     printf ("   port: %d\n\n", port) ;
-  } // if  
+  } // if
 
   // Build a tuple and return it back to the Python Controller
   return Py_BuildValue ("(iiii)",
@@ -111,7 +118,7 @@ static PyObject* setup (PyObject *self, PyObject *args)
  *    This function sets the CAMERA position
  *
  *    Simply updates the pan/tilt SERVOs positions
- *    with the new ones. 
+ *    with the new ones.
  ******************************************************************************
  */
 static PyObject* setPosition (PyObject *self, PyObject *args)
@@ -119,10 +126,10 @@ static PyObject* setPosition (PyObject *self, PyObject *args)
   // Parse the arguments from python
   int cameraXtoSet, cameraYtoSet ;
 
-  PyArg_ParseTuple (args, "((iiii)(ii))", 
+  PyArg_ParseTuple (args, "((iiii)(ii))",
     &camera_pwm[0], &camera_pwm[1], &cameraX, &cameraY,
     &cameraXtoSet, &cameraYtoSet) ;
-  
+
   //
   cameraX = cameraXtoSet ;
   cameraY = cameraYtoSet ;
@@ -133,7 +140,7 @@ static PyObject* setPosition (PyObject *self, PyObject *args)
     printf ("CAMERA:\n setPosition():\n") ;
     printf ("   pwm: %d, %d\n", camera_pwm[0], camera_pwm[1]) ;
     printf ("   cameraX: %d, cameraY: %d\n", cameraX, cameraY) ;
-    printf ("   cameraXtoSet: %d, cameraYtoSet: %d\n\n", 
+    printf ("   cameraXtoSet: %d, cameraYtoSet: %d\n\n",
       cameraXtoSet, cameraYtoSet) ;
   } // if
 
@@ -145,7 +152,7 @@ static PyObject* setPosition (PyObject *self, PyObject *args)
 
 /*
  * C Extension for Python
- *    This function 
+ *    This function
  *
  ******************************************************************************
  */
@@ -174,7 +181,7 @@ static PyObject* startServoBlaster (PyObject *self, PyObject *args)
 
 /*
  * C Extension for Python
- *    This function 
+ *    This function
  *
  ******************************************************************************
  */
@@ -199,7 +206,7 @@ static PyObject* stopServoBlaster (PyObject *self, PyObject *args)
 
 /*
  * C Extension for Python
- *    This function 
+ *    This function
  *
  ******************************************************************************
  */
@@ -226,7 +233,7 @@ static PyObject* startMjpegStreamer (PyObject *self, PyObject *args)
 
 /*
  * C Extension for Python
- *    This function 
+ *    This function
  *
  ******************************************************************************
  */
@@ -251,7 +258,7 @@ static PyObject* stopMjpegStreamer (PyObject *self, PyObject *args)
 
 /*
  * C Extension for Python
- *    This function 
+ *    This function
  *
  ******************************************************************************
  */
@@ -274,7 +281,7 @@ static PyObject* startRaspiStill (PyObject *self, PyObject *args)
   {
     perror ("CAMERA: startRaspiStill(): fork failed") ;
     exit (1) ;
-  } // 
+  } //
 
   if (raspistill_pid == 0)
   {
@@ -286,7 +293,7 @@ static PyObject* startRaspiStill (PyObject *self, PyObject *args)
       sprintf (command, "sudo raspistill -w %d -h %d -vf -hf -t 1 -o %s/image.jpg",
         STILLS_WIDTH, STILLS_HEIGHT, path) ;
     else
-      sprintf (command, "sudo raspistill -w %d -h %d -vf -hf -t %d -tl %d -o %s/img%%04d.jpg", 
+      sprintf (command, "sudo raspistill -w %d -h %d -vf -hf -t %d -tl %d -o %s/img%%04d.jpg",
         STILLS_WIDTH, STILLS_HEIGHT, timeout, timelapse, path) ;
 
     if (DEBUG == TRUE)
@@ -330,6 +337,6 @@ static PyMethodDef camera_methods[] = {
  ******************************************************************************
  */
 void initcamera ()
-{  
+{
   (void) Py_InitModule("camera", camera_methods) ;
 } // initCamera
