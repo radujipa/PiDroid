@@ -1,6 +1,7 @@
 # Android Studio
 PiDroid/.gradle
 PiDroid/.idea
+PiDroid/build
 PiDroid/local.properties
 
 # Java class files

@@ -136,7 +136,7 @@ public class ControllerTutorial {
 
                 //
                 introTutorial.show();
-            }
+            } // run()
         });
     } // start()
 
