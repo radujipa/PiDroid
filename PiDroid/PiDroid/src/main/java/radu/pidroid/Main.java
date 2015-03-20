@@ -79,7 +79,7 @@ public class Main extends Activity implements View.OnClickListener {
             }
             else
                 editor.clear();
-            editor.commit();
+            editor.apply();
 
             // Switch to the PiDroid Controller activity
             Intent intent = new Intent(this, Controller.class);

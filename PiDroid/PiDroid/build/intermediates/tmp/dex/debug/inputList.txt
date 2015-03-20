@@ -1,0 +1,3 @@
+/Users/radu/Projects/PiDroid/PiDroid/PiDroid/build/intermediates/classes/debug
+/Users/radu/Projects/PiDroid/PiDroid/PiDroid/build/intermediates/pre-dexed/debug/classes-e7f34d399587f5b7ced57630f376e9d74739a10e.jar
+/Users/radu/Projects/PiDroid/PiDroid/PiDroid/build/intermediates/pre-dexed/debug/support-v4-18.0.0-c31e965abe6ae7107606bd8ad10adec73a9092ab.jar

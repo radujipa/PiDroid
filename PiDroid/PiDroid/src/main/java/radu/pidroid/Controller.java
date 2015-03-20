@@ -16,7 +16,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -30,7 +29,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -51,7 +49,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import radu.pidroid.Connector.PiDroidMessenger;
+import radu.pidroid.Tutorials.ControllerTutorial;
+import radu.pidroid.Connector.Messenger;
 import radu.pidroid.Joystick.JoystickView;
 import radu.pidroid.MjpegViewer.MjpegInputStream;
 import radu.pidroid.MjpegViewer.MjpegView;
@@ -83,16 +82,16 @@ public class Controller extends Activity
     public final static int SPEECH_RECOGNITION_REQUEST_CODE = 513365;
 
     // acceleration states & direction states
-    private final static int ROVER_ACCELERATING = 10;
-    private final static int ROVER_DECELERATING = 11;
-    private final static int ROVER_STOPPED = 12;
-    private final static int ROVER_FORWARDS = 20;
-    private final static int ROVER_BACKWARDS = 21;
+    public final static int ROVER_ACCELERATING = 10;
+    public final static int ROVER_DECELERATING = 11;
+    public final static int ROVER_STOPPED = 12;
+    public final static int ROVER_FORWARDS = 20;
+    public final static int ROVER_BACKWARDS = 21;
 
     //
-    private final static int TOUCH_CONTROLS = 30;
-    private final static int SLIDER_CONTROLS = 31;
-    private final static int JOYSTICK_CONTROLS = 32;
+    public final static int TOUCH_CONTROLS = 30;
+    public final static int SLIDER_CONTROLS = 31;
+    public final static int JOYSTICK_CONTROLS = 32;
 
     //
     public static int controlsID;
@@ -110,29 +109,29 @@ public class Controller extends Activity
 
 
     //
-    ImageView hudImageView, levelIndicatorImageView;
+    public ImageView hudImageView, levelIndicatorImageView;
 
     int currentHudResource;
     final int[] hudResources = new int[] {R.drawable.hud_clean_1366x768, R.drawable.hud_lines_1366x768};
 
-    ImageView speechButton;
+    public ImageView speechButton;
 
-    MjpegView videoFeedMjpegView;
+    public MjpegView videoFeedMjpegView;
     boolean videoFeedOn, cameraStabilisationOn;
     VideoFeedTask videoFeedTask = null;
 
     RelativeLayout touchControlsLayout;
-    ImageView   forwardsPowerImageView, backwardsPowerImageView;
-    ProgressBar forwardsPowerProgressBar, backwardsPowerProgressBar;
+    public ImageView   forwardsPowerImageView, backwardsPowerImageView;
+    public ProgressBar forwardsPowerProgressBar, backwardsPowerProgressBar;
 
     RelativeLayout sliderControlsLayout;
-    SeekBar forwardsPowerSeekBar, backwardsPowerSeekBar;
+    public SeekBar forwardsPowerSeekBar, backwardsPowerSeekBar;
 
     RelativeLayout joystickControlsLayout;
-    JoystickView largeCameraJoystickView, directionJoystickView;
+    public JoystickView largeCameraJoystickView, directionJoystickView;
 
     JoystickView smallCameraJoystickView;
-    ImageView toggleSpinImageView;
+    public ImageView toggleSpinImageView;
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer, mGeomagnetic;
@@ -150,7 +149,7 @@ public class Controller extends Activity
     private int roverDirection = ROVER_FORWARDS;
     private int roverAccelerationState = ROVER_STOPPED;
 
-    private PiDroidMessenger mPiDroidMessenger;
+    private Messenger mMessenger;
     private CommandRecogniser mRecogniser;
 
     private boolean tutorialsOn;
@@ -225,7 +224,7 @@ public class Controller extends Activity
                     toggleSpinImageView.setImageResource(R.drawable.spin_button_up);
 
                 // Let PiDroid know whether to spin
-                mPiDroidMessenger.toggleSpin(spinControlOn);
+                mMessenger.toggleSpin(spinControlOn);
             } // onClick
         });
 
@@ -234,8 +233,8 @@ public class Controller extends Activity
         serverIP   = intent.getStringExtra(Main.EXTRA_SERVERIP);
         serverPort = intent.getIntExtra(Main.EXTRA_SERVERPORT, 8090);
 
-        mPiDroidMessenger = new PiDroidMessenger(this, serverIP, serverPort);
-        mRecogniser = new CommandRecogniser(this, mPiDroidMessenger, videoFeedMjpegView);
+        mMessenger = new Messenger(this, serverIP, serverPort);
+        mRecogniser = new CommandRecogniser(this, mMessenger, videoFeedMjpegView);
 
         if (Main.detailsCheckBox.isChecked()) loadPreferences();
         else                                  clearPreferences();
@@ -244,7 +243,7 @@ public class Controller extends Activity
         setupVideoFeed();
 
         if (tutorialsOn)
-            displayTutorial(this);
+            new ControllerTutorial(this).start();
     } // onCreate
 
 
@@ -293,8 +292,8 @@ public class Controller extends Activity
         .setIcon(android.R.drawable.ic_dialog_alert)
         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
-                mPiDroidMessenger.updateRoverSpeed(roverSpeed = 0);
-                mPiDroidMessenger.stopMessenger();
+                mMessenger.updateRoverSpeed(roverSpeed = 0);
+                mMessenger.stopMessenger();
                 finish();
             } // onClick
         }) // .setPositiveButton
@@ -344,7 +343,7 @@ public class Controller extends Activity
         editor.putBoolean(EXTRA_CAMERA_STABILISATION_ON, cameraStabilisationOn);
         editor.putBoolean(EXTRA_TUTORIALS_ON, tutorialsOn);
 
-        editor.commit();
+        editor.apply();
     } // savePreferences
 
 
@@ -354,125 +353,8 @@ public class Controller extends Activity
         SharedPreferences.Editor editor = preferences.edit();
 
         editor.clear();
-        editor.commit();
+        editor.apply();
     } // clearPreferences
-
-
-    //**********************************************************************************************
-    //                                      APP TUTORIAL
-    //**********************************************************************************************
-
-
-    private void displayTutorial(Context UIContext) {
-
-        //
-        final AlertDialog drawerTutorial, voiceTutorial, touchTutorial;
-        final AlertDialog tiltTutorial, joystickTutorial, spinTutorial;
-        final AlertDialog introTutorial, finalTutorial;
-
-        finalTutorial = new AlertDialog.Builder(UIContext, AlertDialog.THEME_HOLO_DARK)
-                .setPositiveButton("That concludes the tutorial!\n" +
-                        "Have fun!", null)
-                .create();
-
-        voiceTutorial = new AlertDialog.Builder(UIContext, AlertDialog.THEME_HOLO_DARK)
-                .setPositiveButton("You can also control PiDroid by issuing voice commands.\n" +
-                        "Press the mic button and use intuitive commands.", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        speechButton.setBackgroundColor(0); // clear background color
-                        finalTutorial.show();
-                    }
-                })
-                .create();
-
-        spinTutorial = new AlertDialog.Builder(UIContext, AlertDialog.THEME_HOLO_DARK)
-                .setPositiveButton("This is a TOGGLE button for SPIN control.\n" +
-                        "Spin LEFT or RIGHT when going BACKWARDS or FORWARDS.",
-                        new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        speechButton.setBackgroundColor(Color.argb(150, 0, 255, 0)); // green
-                        toggleSpinImageView.setBackgroundColor(0); // clear colour
-                        voiceTutorial.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                        voiceTutorial.show();
-                    }
-                })
-                .create();
-
-        joystickTutorial = new AlertDialog.Builder(UIContext, AlertDialog.THEME_HOLO_DARK)
-                .setPositiveButton("You can also use these two joysticks to control PiDroid.\n" +
-                        "LEFT one for camera and RIGHT for driving.", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        setControls(TOUCH_CONTROLS);
-                        toggleSpinImageView.setBackgroundColor(Color.argb(150, 0, 255, 0)); // green
-                        largeCameraJoystickView.setBackgroundColor(0); // clear colour
-                        directionJoystickView.setBackgroundColor(0);
-                        spinTutorial.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                        spinTutorial.show();
-                    }
-                })
-                .create();
-
-        tiltTutorial = new AlertDialog.Builder(UIContext, AlertDialog.THEME_HOLO_DARK)
-                .setPositiveButton("To turn LEFT or RIGHT tilt the device in the \n"
-                        + "corresponding direction. The gyro will do the work.", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        setControls(JOYSTICK_CONTROLS);
-                        largeCameraJoystickView.setBackgroundColor(Color.argb(150, 0,255,0)); // green
-                        directionJoystickView.setBackgroundColor(Color.argb(150, 0,255,0));
-                        joystickTutorial.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                        joystickTutorial.show();
-                    }
-                })
-                .create();
-
-        touchTutorial = new AlertDialog.Builder(UIContext, AlertDialog.THEME_HOLO_DARK)
-                .setPositiveButton("Touch the LEFT side of the screen to go BACKWARDS\n"
-                        + "and the RIGHT side to go FORWARDS.", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        forwardsPowerImageView.setBackgroundColor(0);  // clear background color
-                        backwardsPowerImageView.setBackgroundColor(0);
-                        tiltTutorial.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                        tiltTutorial.show();
-                    }
-                })
-                .create();
-
-        drawerTutorial = new AlertDialog.Builder(UIContext, AlertDialog.THEME_HOLO_DARK)
-            .setPositiveButton("This is the settings menu.\n"
-                    + "Drag to open and quickly make changes.", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    setControls(TOUCH_CONTROLS);
-                    mDrawerLayout.closeDrawer(mDrawerListView);
-                    forwardsPowerImageView.setBackgroundColor(Color.argb(150, 0, 255, 0));  // green
-                    backwardsPowerImageView.setBackgroundColor(Color.argb(150, 255, 0, 0)); // red
-                    touchTutorial.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                    touchTutorial.show();
-                }
-            })
-            .create();
-
-        introTutorial = new AlertDialog.Builder(UIContext, AlertDialog.THEME_HOLO_DARK)
-                .setPositiveButton("This will be a short tutorial on HOW TO use the app.\n" +
-                        "To SKIP it, simply press the back button.", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        mDrawerLayout.openDrawer(mDrawerListView);
-                        drawerTutorial.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                        drawerTutorial.show();
-                    }
-                })
-                .create();
-
-        //
-        introTutorial.show();
-
-    } // displayTutorials
 
 
     //**********************************************************************************************
@@ -480,9 +362,9 @@ public class Controller extends Activity
     //**********************************************************************************************
 
 
-    private DrawerLayout mDrawerLayout;
-    private DrawerAdapter mDrawerAdapter;
-    private ExpandableListView mDrawerListView;
+    public DrawerLayout mDrawerLayout;
+    public DrawerAdapter mDrawerAdapter;
+    public ExpandableListView mDrawerListView;
 
     private String[] mDrawerItemsList;
     private List<DrawerItem> parentData;
@@ -555,7 +437,8 @@ public class Controller extends Activity
                 break;
 
             default:
-                Log.e("createNavigationDrawerRows(): ", "invalid drawer item type! Check strings.xml");
+                // invalid drawer item type
+                Log.e("createDrawerRows(): ", "Check strings.xml");
             } // switch
 
             //
@@ -643,7 +526,7 @@ public class Controller extends Activity
             @Override
             public String calculate(int progress) {
                 turnSensitivity = progress / 25 + 1;
-                mPiDroidMessenger.updateTurnSensitivity(turnSensitivity);
+                mMessenger.updateTurnSensitivity(turnSensitivity);
                 return turnSensitivity + "";
             } // calculate
         });
@@ -689,7 +572,7 @@ public class Controller extends Activity
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mPiDroidMessenger.clearLearningData();
+                        mMessenger.clearLearningData();
                     } // onClick
                 }) // .setPositiveButton
                 .setNegativeButton(android.R.string.cancel, null)
@@ -869,8 +752,8 @@ public class Controller extends Activity
         //
         if (turnAngle != lastTurnAngle) {
             lastTurnAngle = turnAngle;
-            mPiDroidMessenger.updateTurnAngle(turnAngle);
-            Log.d("Controller: tiltControls():", "here's your tilt angle = " + turnAngle);
+            mMessenger.updateTurnAngle(turnAngle);
+            Log.d("tiltControls():", "tilt angle = " + turnAngle);
         } // if
     } // tiltControls
 
@@ -905,7 +788,7 @@ public class Controller extends Activity
             if (action == MotionEvent.ACTION_DOWN) {
                 if (roverAccelerationState != ROVER_STOPPED && roverDirection != ROVER_FORWARDS) {
                     roverAccelerationState = ROVER_STOPPED;
-                    mPiDroidMessenger.updateRoverSpeed(roverSpeed = 0);
+                    mMessenger.updateRoverSpeed(roverSpeed = 0);
                 } // if
                 else {
                     roverDirection = ROVER_FORWARDS;
@@ -928,7 +811,7 @@ public class Controller extends Activity
             if (action == MotionEvent.ACTION_DOWN) {
                 if (roverAccelerationState != ROVER_STOPPED && roverDirection != ROVER_BACKWARDS) {
                     roverAccelerationState = ROVER_STOPPED;
-                    mPiDroidMessenger.updateRoverSpeed(roverSpeed = 0);
+                    mMessenger.updateRoverSpeed(roverSpeed = 0);
                 } // if
                 else {
                     roverDirection = ROVER_BACKWARDS;
@@ -970,7 +853,7 @@ public class Controller extends Activity
             if (roverSpeed / 25 * 25 != roverLastSpeed) {
                 roverLastSpeed = (int)(roverSpeed / 25.0 * 25);
                 if (roverDirection == ROVER_BACKWARDS) roverLastSpeed *= -1;
-                mPiDroidMessenger.updateRoverSpeed(roverLastSpeed);
+                mMessenger.updateRoverSpeed(roverLastSpeed);
             } // if
 
             //
@@ -1067,7 +950,7 @@ public class Controller extends Activity
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        mPiDroidMessenger.updateRoverSpeed(roverSpeed);
+        mMessenger.updateRoverSpeed(roverSpeed);
     } // onStopTrackingTouch
 
 
@@ -1091,7 +974,7 @@ public class Controller extends Activity
             if (cameraX != newX || cameraY != newY) {
                 cameraX = newX;
                 cameraY = newY;
-                mPiDroidMessenger.updateCameraPosition(cameraX, cameraY);
+                mMessenger.updateCameraPosition(cameraX, cameraY);
                 Log.d("Controller: onMove():", "cameraX = " + cameraX + ", cameraY = " + cameraY);
             } // if
             break;
@@ -1100,7 +983,7 @@ public class Controller extends Activity
             // If there is a new roverSpeed, tell PiDroid about it.
             if (roverSpeed != newY) {
                 roverSpeed = newY;
-                mPiDroidMessenger.updateRoverSpeed(roverSpeed);
+                mMessenger.updateRoverSpeed(roverSpeed);
                 //Log.d("Controller: onMove():", "roverSpeed = " + roverSpeed);
             } // if
 
@@ -1114,7 +997,7 @@ public class Controller extends Activity
             if (turnAngle != newX) {
                 turnAngle = newX;
                 //Log.d("Controller: onMove():", "turn angle = " + turnAngle);
-                mPiDroidMessenger.updateRoverSpeed(roverSpeed);
+                mMessenger.updateRoverSpeed(roverSpeed);
             } // if
             break;
         } // switch
@@ -1129,16 +1012,16 @@ public class Controller extends Activity
         case R.id.largeCameraJoystickView:
 
             // Tell PiDroid to reset the camera position.
-            //mPiDroidMessenger.updateCameraPosition(cameraX = 0, cameraY = 0);
+            //mMessenger.updateCameraPosition(cameraX = 0, cameraY = 0);
             break;
 
         case R.id.directionJoystickView:
 
             roverSpeed = 0;
-            mPiDroidMessenger.updateRoverSpeed(roverSpeed);
+            mMessenger.updateRoverSpeed(roverSpeed);
 
             turnAngle = 90;
-            mPiDroidMessenger.updateTurnAngle(turnAngle);
+            mMessenger.updateTurnAngle(turnAngle);
             break;
         } // switch
     } // onRelease
@@ -1179,7 +1062,7 @@ public class Controller extends Activity
             videoFeedTask = new VideoFeedTask();
             videoFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, URL);
         } catch (Exception exception) {
-            Log.e("Controller: setupVideoFeed():", "Could not connect to host!");
+            Log.e("setupVideoFeed():", "Could not connect to host!");
             return false;
         } // try-catch
 
@@ -1196,10 +1079,10 @@ public class Controller extends Activity
             HttpParams httpParams = httpClient.getParams();
             HttpConnectionParams.setConnectionTimeout(httpParams, 5 * 1000);
 
-            Log.d("Controller: VideoFeedTask: DoRead():", "1. Sending http request");
+            Log.d("VideoFeedTask:", "1. Sending http request");
             try {
                 res = httpClient.execute(new HttpGet(URI.create(url[0])));
-                Log.e("Controller: VideoFeedTask: DoRead():", "2. Request finished, status = " + res.getStatusLine().getStatusCode());
+                Log.e("VideoFeedTask:", "2. Request finished, status = " + res.getStatusLine().getStatusCode());
                 if(res.getStatusLine().getStatusCode()==401){
                     // You must turn off camera User Access Control before this will work
                     return null;
@@ -1207,7 +1090,7 @@ public class Controller extends Activity
                 return new MjpegInputStream(res.getEntity().getContent());
             } catch (Exception e) {
                 //e.printStackTrace();
-                Log.e("Controller: VideoFeedTask: DoRead():", "Caught exception: ", e.getCause());
+                Log.e("VideoFeedTask:", "Caught exception: ", e.getCause());
             } // try-catch
             return null;
         }
@@ -1260,7 +1143,7 @@ public class Controller extends Activity
             objects = getResources().getStringArray(R.array.object_names);
 
             // Define the behaviour of a reply from PiDroid sent by RecogniserController
-            mPiDroidMessenger.setRecogniserController(new PiDroidMessenger.RecogniserController() {
+            mMessenger.setRecogniserController(new Messenger.RecogniserController() {
                 @Override
                 public void onLearnNewObjectReply() {
                     videoFeedOn = true;
@@ -1287,7 +1170,7 @@ public class Controller extends Activity
             dialog.setCancelable(false);
             dialog.show();
 
-            Log.d("Controller: LearningTask():", "Progress dialog is showing...");
+            Log.d("LearningTask:", "Progress dialog is showing...");
         } // constructor
 
 
@@ -1300,28 +1183,28 @@ public class Controller extends Activity
 
             if (taskType == PIDROID_LEARN)
                 // Tell PiDroid to kick off the learning process
-                mPiDroidMessenger.learnNewObject(objectType);
+                mMessenger.learnNewObject(objectType);
             else
             if (taskType == PIDROID_RECOGNISE)
                 // Tell PiDroid to kick off the recognition process
-                mPiDroidMessenger.recogniseObject();
+                mMessenger.recogniseObject();
 
             // Here we wait for a reply from PiDroid meaning that the learning process has finished
             // The variable is set by the onLearnNewObjectReply() defined in the Constructor
             while (!videoFeedOn)
             {
-                Log.d("Controller: LearningTask: doInBackground():", "Failed to restart video feed!");
+                Log.d("LearningTask:", "Failed to restart video feed!");
 
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException interruptedException) {
-                    Log.d("Controller: LearningTask: doInBackground():", "Thread got interrupted");
+                    Log.d("LearningTask:", "Thread got interrupted");
                 } // try - catch
             } // while
 
             setupVideoFeed();
 
-            Log.d("Controller: LearningTask: doInBackground():", "Progress dialog is being dismissed...");
+            Log.d("LearningTask:", "Progress dialog is being dismissed...");
 
             return true;
         } // doInBackground

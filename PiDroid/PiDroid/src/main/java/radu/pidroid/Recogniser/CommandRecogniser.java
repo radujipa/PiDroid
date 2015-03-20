@@ -13,7 +13,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import radu.pidroid.Connector.PiDroidMessenger;
+import radu.pidroid.Connector.Messenger;
 import radu.pidroid.MjpegViewer.MjpegView;
 import radu.pidroid.R;
 
@@ -44,13 +44,13 @@ public class CommandRecogniser {
     private final String[][] commandsWithID = new String[resources.length][];
 
     private final Context UIContext;
-    private final PiDroidMessenger mPiDroidMessenger;
+    private final Messenger mMessenger;
     private final MjpegView mjpegView;
 
 
-    public CommandRecogniser(Context context, PiDroidMessenger messenger, MjpegView mjpegView) {
+    public CommandRecogniser(Context context, Messenger messenger, MjpegView mjpegView) {
         this.UIContext = context;
-        this.mPiDroidMessenger = messenger;
+        this.mMessenger = messenger;
         this.mjpegView = mjpegView;
 
         // Initialise the data structure with commands from /values/voice_commands
@@ -76,43 +76,43 @@ public class CommandRecogniser {
                 switch (id) {
 
                 case FORWARD_COMMAND:
-                    mPiDroidMessenger.updateRoverSpeed(50);
-                    mPiDroidMessenger.updateTurnAngle(90);
+                    mMessenger.updateRoverSpeed(50);
+                    mMessenger.updateTurnAngle(90);
                     break;
 
                 case BACKWARD_COMMAND:
-                    mPiDroidMessenger.updateRoverSpeed(-50);
-                    mPiDroidMessenger.updateTurnAngle(90);
+                    mMessenger.updateRoverSpeed(-50);
+                    mMessenger.updateTurnAngle(90);
                     break;
 
                 case TURN_LEFT_COMMAND:
-                    mPiDroidMessenger.updateTurnAngle(180);
+                    mMessenger.updateTurnAngle(180);
                     break;
 
                 case TURN_RIGHT_COMMAND:
-                    mPiDroidMessenger.updateTurnAngle(0);
+                    mMessenger.updateTurnAngle(0);
                     break;
 
                 case CAMERA_UP_COMMAND:
-                    mPiDroidMessenger.updateCameraPosition(0,100);
+                    mMessenger.updateCameraPosition(0,100);
                     break;
 
                 case CAMERA_DOWN_COMMAND:
-                    mPiDroidMessenger.updateCameraPosition(0,-100);
+                    mMessenger.updateCameraPosition(0,-100);
                     break;
 
                 case CAMERA_LEFT_COMMAND:
-                    mPiDroidMessenger.updateCameraPosition(-100,0);
+                    mMessenger.updateCameraPosition(-100,0);
                     break;
 
                 case CAMERA_RIGHT_COMMAND:
-                    mPiDroidMessenger.updateCameraPosition(100,0);
+                    mMessenger.updateCameraPosition(100,0);
                     break;
 
                 case STOP_RESET_COMMAND:
-                    mPiDroidMessenger.updateRoverSpeed(0);
-                    mPiDroidMessenger.updateCameraPosition(0,0);
-                    mPiDroidMessenger.updateTurnAngle(90);
+                    mMessenger.updateRoverSpeed(0);
+                    mMessenger.updateCameraPosition(0,0);
+                    mMessenger.updateTurnAngle(90);
                     break;
 
                 case LEARN_OBJECT_COMMAND:

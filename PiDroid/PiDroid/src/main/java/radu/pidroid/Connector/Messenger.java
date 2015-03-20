@@ -1,5 +1,5 @@
 /*
-  PiDroidMessenger.java
+  Messenger.java
 
   Copyright (C) 2015 Radu Traian Jipa
   License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
@@ -14,7 +14,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 
-public class PiDroidMessenger {
+public class Messenger {
 
     public final static int PIDROID_ROVER_CONTROLLER = 0;
     public final static int PIDROID_SET_TURN_ANGLE = 0;
@@ -38,7 +38,7 @@ public class PiDroidMessenger {
     private RecogniserController recogniser;
 
 
-    public PiDroidMessenger(Context UIContext, String ip, int port) {
+    public Messenger(Context UIContext, String ip, int port) {
         this.serverIP = ip;
         this.serverPort = port;
 
@@ -126,23 +126,21 @@ public class PiDroidMessenger {
         switch (controller) {
 
         case PIDROID_CAMERA_CONTROLLER:
-            Log.d("MessagingTask: dispatch():", "PIDROID_CAMERA_CONTROLLER nothing to do here");
+            Log.d("dispatch():", "PIDROID_CAMERA_CONTROLLER nothing to do here");
             break;
 
         case PIDROID_ROVER_CONTROLLER:
-            Log.d("MessagingTask: dispatch():", "PIDROID_ROVER_CONTROLLER nothing to do here");
+            Log.d("dispatch():", "PIDROID_ROVER_CONTROLLER nothing to do here");
             break;
 
         case PIDROID_RECOGNISER_CONTROLLER:
             //
-
             /*  */ if (method == 0) recogniser.onLearnNewObjectReply();
             else   if (method == 1) recogniser.onRecogniseObjectReply(param);
             break;
 
         default:
-            Log.e("MessagingTask: dispatch():", "Switch fell through default case " +
-                    "with controller = " + controller);
+            Log.e("dispatch():", "Switch fell through default case " + "with controller = " + controller);
         } // switch
 
     } // dispatch
@@ -195,7 +193,7 @@ public class PiDroidMessenger {
                 mTCPClient.startClient();
             } // try
             catch(TCPClient.TCPClientException exception) {
-                Log.e("MessagingTask: doInBackground():", "Failed to start client.");
+                Log.e("MessagingTask:", "Failed to start client.");
                 publishProgress(null);
             } // catch
 
@@ -221,5 +219,4 @@ public class PiDroidMessenger {
         } // onProgressUpdate
     } // connectTask
 
-
-} // PiDroidMessenger
+} // Messenger

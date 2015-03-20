@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/radu/Projects/PiDroid/PiDroid/PiDroid/build/intermediates/exploded-aar/com.android.support/appcompat-v7/18.0.0/classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="8f11f56e350eacabf2273f646d981356eea0ed77">
+        <dex dex="/Users/radu/Projects/PiDroid/PiDroid/PiDroid/build/intermediates/pre-dexed/debug/classes-e7f34d399587f5b7ced57630f376e9d74739a10e.jar" />
+    </item>
+    <item
+        jar="/Applications/sdk/extras/android/m2repository/com/android/support/support-v4/18.0.0/support-v4-18.0.0.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="44ec51e9d395a47aab135e5e1b556c0007442156">
+        <dex dex="/Users/radu/Projects/PiDroid/PiDroid/PiDroid/build/intermediates/pre-dexed/debug/support-v4-18.0.0-c31e965abe6ae7107606bd8ad10adec73a9092ab.jar" />
+    </item>
+
+</items>
