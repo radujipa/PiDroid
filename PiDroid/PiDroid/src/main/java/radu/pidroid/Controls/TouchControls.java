@@ -16,12 +16,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import radu.pidroid.Managers.ControlsManager;
-import radu.pidroid.R;
-import radu.pidroid.Activities.Controller;
 import radu.pidroid.Managers.SettingsManager;
-import radu.pidroid.Robot.RoboticPlatform;
+import radu.pidroid.R;
 import radu.pidroid.Robot.MotorsController.Direction;
 import radu.pidroid.Robot.MotorsController.State;
+import radu.pidroid.Robot.RoboticPlatform;
 
 
 public class TouchControls implements View.OnTouchListener {

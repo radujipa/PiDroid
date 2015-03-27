@@ -10,10 +10,8 @@ package radu.pidroid.Controls;
 
 import android.util.Log;
 
-import radu.pidroid.Activities.Controller;
 import radu.pidroid.Joystick.JoystickView;
 import radu.pidroid.R;
-import radu.pidroid.Robot.MotorsController.Direction;
 import radu.pidroid.Robot.RoboticPlatform;
 
 

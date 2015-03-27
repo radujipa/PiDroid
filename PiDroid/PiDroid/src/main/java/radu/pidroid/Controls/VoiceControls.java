@@ -11,13 +11,11 @@ package radu.pidroid.Controls;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
 import android.view.View;
-import android.widget.ImageView;
 
 import java.util.ArrayList;
 
 import radu.pidroid.Activities.Controller;
 import radu.pidroid.Connector.MethodInvocation;
-import radu.pidroid.R;
 
 
 public class VoiceControls implements View.OnClickListener, Controller.ActivityResultListener {

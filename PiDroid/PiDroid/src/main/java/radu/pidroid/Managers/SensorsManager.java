@@ -14,10 +14,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
-import android.view.View;
 
 import radu.pidroid.Activities.Controller;
-import radu.pidroid.Connector.Messenger;
 
 
 public class SensorsManager implements SensorEventListener {

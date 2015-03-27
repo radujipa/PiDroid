@@ -11,6 +11,7 @@ package radu.pidroid.MjpegViewer;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 
+
 public class MjpegStabiliser {
 
     private final double maxTiltAngle = 30;

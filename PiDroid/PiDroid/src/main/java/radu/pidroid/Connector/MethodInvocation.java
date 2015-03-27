@@ -1,5 +1,5 @@
 /*
-  CommandRecogniser.java
+  MethodInvocation.java
 
   Copyright (C) 2015 Radu Traian Jipa
   License: http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
@@ -13,8 +13,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import radu.pidroid.Connector.Messenger;
-import radu.pidroid.MjpegViewer.MjpegView;
 import radu.pidroid.R;
 
 

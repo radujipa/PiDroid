@@ -11,21 +11,13 @@ package radu.pidroid.Activities;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
-import android.util.Log;
 import android.view.Menu;
-import android.view.View;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
 
-import java.util.ArrayList;
-
+import radu.pidroid.Connector.Messenger;
 import radu.pidroid.Connector.MethodInvocation;
 import radu.pidroid.Managers.ControlsManager;
 import radu.pidroid.Managers.DrawerManager;
@@ -34,9 +26,6 @@ import radu.pidroid.Managers.SettingsManager;
 import radu.pidroid.Managers.VideoFeedManager;
 import radu.pidroid.R;
 import radu.pidroid.Tutorials.ControllerTutorial;
-import radu.pidroid.Connector.Messenger;
-import radu.pidroid.SettingsDrawer.DrawerItem;
-import radu.pidroid.SettingsDrawer.DrawerRow;
 
 
 public class Controller extends Activity {
@@ -103,7 +92,7 @@ public class Controller extends Activity {
         videoFeed.start();
 
         if (settings.tutorialsON)
-            new ControllerTutorial(this).start();
+            new ControllerTutorial(this, controls, drawer).start();
     } // onCreate
 
 
@@ -177,111 +166,5 @@ public class Controller extends Activity {
     public void setActivityResultListener(ActivityResultListener listener) {
         this.activityResultListener = listener;
     } // setActivityResultListener
-
-
-    //**********************************************************************************************
-    //                                   MACHINE LEARNING
-    //**********************************************************************************************
-
-
-    public class LearningTask extends AsyncTask<Void, Void, Boolean> {
-
-        public final static int PIDROID_LEARN = 0;
-        public final static int PIDROID_RECOGNISE = 1;
-
-        private final Context UIContext;
-        private final ProgressDialog dialog;
-        private final int taskType;
-
-        private String objects[];
-        private int objectType;
-
-
-        public LearningTask(Context context, int taskType, int objectType) {
-            this(context, taskType);
-
-            this.objectType = objectType;
-        } // constructor
-
-
-        public LearningTask(Context context, int taskType) {
-            this.UIContext = context;
-            this.taskType = taskType;
-
-            objects = getResources().getStringArray(R.array.object_names);
-
-            // Define the behaviour of a reply from PiDroid sent by RecogniserController
-            messenger.setRecogniserController(new Messenger.RecogniserController() {
-                @Override
-                public void onLearnNewObjectReply() {
-                    videoFeedOn = true;
-                } // onLearnNewObjectReply
-
-                @Override
-                public void onRecogniseObjectReply(int objType) {
-                    videoFeedOn = true;
-
-                    if (objType != -1)
-                        new AlertDialog.Builder(UIContext, AlertDialog.THEME_HOLO_DARK)
-                                .setPositiveButton("The object is a " + objects[objType].toUpperCase(), null)
-                                .create().show();
-                    else
-                        new AlertDialog.Builder(UIContext, AlertDialog.THEME_HOLO_DARK)
-                                .setPositiveButton("The object could not be recognised.", null)
-                                .create().show();
-                } // onRecogniseObjectReply
-            });
-
-            // Let the user know PiDroid is busy
-            dialog = new ProgressDialog(UIContext, AlertDialog.THEME_HOLO_DARK);
-            dialog.setMessage("PiDroid is computing...");
-            dialog.setCancelable(false);
-            dialog.show();
-
-            Log.d("LearningTask:", "Progress dialog is showing...");
-        } // constructor
-
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // Because PiDroid uses the camera to learn new objects or recognise them, it stops the stream
-            videoFeedMjpegView.stopPlayback();
-            videoFeedTask.cancel(true);
-            videoFeedOn = false;
-
-            if (taskType == PIDROID_LEARN)
-                // Tell PiDroid to kick off the learning process
-                messenger.learnNewObject(objectType);
-            else
-            if (taskType == PIDROID_RECOGNISE)
-                // Tell PiDroid to kick off the recognition process
-                messenger.recogniseObject();
-
-            // Here we wait for a reply from PiDroid meaning that the learning process has finished
-            // The variable is set by the onLearnNewObjectReply() defined in the Constructor
-            while (!videoFeedOn)
-            {
-                Log.d("LearningTask:", "Failed to restart video feed!");
-
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException interruptedException) {
-                    Log.d("LearningTask:", "Thread got interrupted");
-                } // try - catch
-            } // while
-
-            setupVideoFeed();
-
-            Log.d("LearningTask:", "Progress dialog is being dismissed...");
-
-            return true;
-        } // doInBackground
-
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            dialog.dismiss();
-        } // onPostExecute
-    } // LearningTask
 
 } // Controller

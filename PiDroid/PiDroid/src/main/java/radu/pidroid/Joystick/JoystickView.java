@@ -228,8 +228,8 @@ public class JoystickView extends View {
 
 
     public interface MoveListener {
-        public void onMove(JoystickView view, double x, double y);
-        public void onRelease(JoystickView view);
+        void onMove(JoystickView view, double x, double y);
+        void onRelease(JoystickView view);
     } // MoveListener
 
 

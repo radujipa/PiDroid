@@ -11,7 +11,6 @@ package radu.pidroid.Controls;
 import android.util.Log;
 import android.widget.SeekBar;
 
-import radu.pidroid.Activities.Controller;
 import radu.pidroid.Managers.ControlsManager;
 import radu.pidroid.R;
 import radu.pidroid.Robot.MotorsController.Direction;

@@ -74,5 +74,4 @@ public class RoboticPlatform {
         camera.updateCameraPosition(cameraX, cameraY);
     } // notifyCamera
 
-
 } // RoboticPlatform

@@ -8,9 +8,7 @@
 
 package radu.pidroid.Managers;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import radu.pidroid.Activities.Controller;
-import radu.pidroid.Activities.Controller.LearningTask;
 import radu.pidroid.Connector.Messenger;
 import radu.pidroid.Managers.ControlsManager.Controls;
 import radu.pidroid.R;
@@ -65,7 +62,7 @@ public class DrawerManager implements ExpandableListView.OnGroupClickListener {
     public void setup() {
         mDrawerLayout   = (DrawerLayout) controller.findViewById(R.id.DrawerLayout);
         mDrawerListView = (ExpandableListView) controller.findViewById(R.id.LeftDrawer);
-        mDrawerListView.setOnGroupClickListener(controller);
+        mDrawerListView.setOnGroupClickListener(this);
 
         mDrawerItemsList = controller.getResources().getStringArray(R.array.drawer_items_list);
 
@@ -74,6 +71,16 @@ public class DrawerManager implements ExpandableListView.OnGroupClickListener {
         mDrawerAdapter = new DrawerAdapter(mDrawerListView, parentData, childData);
         mDrawerListView.setAdapter(mDrawerAdapter);
     } // setup
+
+
+    public void openDrawer() {
+        mDrawerLayout.openDrawer(mDrawerListView);
+    } // openDrawer
+
+
+    public void closeDrawer() {
+        mDrawerLayout.closeDrawer(mDrawerListView);
+    } // closeDrawer
 
 
     private void createDrawerRows() {
@@ -223,56 +230,8 @@ public class DrawerManager implements ExpandableListView.OnGroupClickListener {
         });
         ((DrawerSettingsRow) childData.get(parentData.get(10)).get(0)).initialise((settings.turnSensitivity - 1) * 25);
 
-        // LEARN NEW OBJECT
-        ((DrawerRow) parentData.get(11)).setRowFunction(new DrawerRow.ToggleSettings() {
-            @Override
-            public void toggle() {
-                mDrawerLayout.closeDrawer(mDrawerListView);
-
-                // Before we fire of the learning process, ask the user what this new object is
-                new AlertDialog.Builder(parentData.get(11).getUIContext(), AlertDialog.THEME_HOLO_DARK)
-                        .setTitle("What is this new object?")
-                        .setIcon(android.R.drawable.ic_dialog_info)
-                        .setItems(R.array.object_names, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int index) {
-                                new LearningTask(parentData.get(11).getUIContext(), LearningTask.PIDROID_LEARN, index).execute();
-                            } // onClick
-                        })
-                        .setCancelable(false)
-                        .create().show();
-            } // toggle
-        });
-
-        // RECOGNISE OBJECT
-        ((DrawerRow) parentData.get(12)).setRowFunction(new DrawerRow.ToggleSettings() {
-            @Override
-            public void toggle() {
-                mDrawerLayout.closeDrawer(mDrawerListView);
-                new LearningTask(parentData.get(12).getUIContext(), LearningTask.PIDROID_RECOGNISE).execute();
-            } // toggle
-        });
-
-        // CLEAR LEARNING DATA
-        ((DrawerRow) parentData.get(13)).setRowFunction(new DrawerRow.ToggleSettings() {
-            @Override
-            public void toggle() {
-                new AlertDialog.Builder(parentData.get(13).getUIContext(), AlertDialog.THEME_HOLO_DARK)
-                        .setTitle("Clear Data")
-                        .setMessage("Are you sure you want to delete all learned data?")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                messenger.clearLearningData();
-                            } // onClick
-                        }) // .setPositiveButton
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .create().show();
-            } // toggle
-        });
-
         // CAMERA STABILISATION
-        ((DrawerRow) parentData.get(15)).setRowFunction(new DrawerRow.ToggleSettings() {
+        ((DrawerRow) parentData.get(12)).setRowFunction(new DrawerRow.ToggleSettings() {
             @Override
             public void toggle() {
                 mDrawerLayout.closeDrawer(mDrawerListView);
@@ -287,7 +246,7 @@ public class DrawerManager implements ExpandableListView.OnGroupClickListener {
         });
 
         // CHANGE HUD
-        ((DrawerRow) parentData.get(16)).setRowFunction(new DrawerRow.ToggleSettings() {
+        ((DrawerRow) parentData.get(13)).setRowFunction(new DrawerRow.ToggleSettings() {
             @Override
             public void toggle() {
                 if (++settings.currentHUDIndex == controller.hudResources.length) settings.currentHUDIndex = 0;
@@ -296,7 +255,7 @@ public class DrawerManager implements ExpandableListView.OnGroupClickListener {
         });
 
         // LEVEL INDICATOR
-        ((DrawerRow) parentData.get(17)).setRowFunction(new DrawerRow.ToggleSettings() {
+        ((DrawerRow) parentData.get(14)).setRowFunction(new DrawerRow.ToggleSettings() {
             @Override
             public void toggle() {
                 if (controls.levelIndicatorImageView.getVisibility() == View.VISIBLE)
@@ -306,7 +265,7 @@ public class DrawerManager implements ExpandableListView.OnGroupClickListener {
         });
 
         // TUTORIALS
-        ((DrawerRow) parentData.get(18)).setRowFunction(new DrawerRow.ToggleSettings() {
+        ((DrawerRow) parentData.get(15)).setRowFunction(new DrawerRow.ToggleSettings() {
             @Override
             public void toggle() {
                 settings.tutorialsON = !settings.tutorialsON;

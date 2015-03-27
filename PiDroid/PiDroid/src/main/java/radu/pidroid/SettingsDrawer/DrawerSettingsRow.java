@@ -80,12 +80,10 @@ public class DrawerSettingsRow extends DrawerItem
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-
     } // onStartTrackingTouch
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-
     } // onStopTrackingTouch
 
 } // DrawerSettingsRow
