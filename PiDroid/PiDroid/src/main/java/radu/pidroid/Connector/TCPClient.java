@@ -19,8 +19,8 @@ import java.net.Socket;
 
 public class TCPClient {
 
-    public static String  SERVER_IP;
-    public static int     SERVER_PORT;
+    public static String SERVER_IP;
+    public static String SERVER_PORT;
 
     private String serverMessage;
     private MessageReceivedListener messageListener = null;
@@ -30,7 +30,7 @@ public class TCPClient {
     BufferedReader inputStream;
 
 
-    public TCPClient(String serverIP, int serverPort) {
+    public TCPClient(String serverIP, String serverPort) {
         SERVER_IP = serverIP;
         SERVER_PORT = serverPort;
     } // constructor
@@ -65,7 +65,7 @@ public class TCPClient {
             Log.d("TCPClient: startClient():", "Connecting...");
 
             // Create a socket to make the connection with the server
-            Socket socket = new Socket(serverAddress, SERVER_PORT);
+            Socket socket = new Socket(serverAddress, Integer.parseInt(SERVER_PORT));
 
             try {
                 // Create the output stream for writing bytes to this socket

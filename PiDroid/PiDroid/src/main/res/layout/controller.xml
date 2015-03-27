@@ -163,6 +163,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/forwardsPowerSeekBar"
                 android:rotation="270"
+                android:thumb="@drawable/thumb_image"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true" />
 
@@ -172,6 +173,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/backwardsPowerSeekBar"
                 android:rotation="270"
+                android:thumb="@drawable/thumb_image"
                 android:layout_alignTop="@+id/forwardsPowerSeekBar" />
 
         </RelativeLayout>

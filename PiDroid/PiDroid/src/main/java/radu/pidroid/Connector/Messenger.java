@@ -33,12 +33,12 @@ public class Messenger {
 
     private TCPClient mTCPClient;
     private String serverIP;
-    private int serverPort;
+    private String serverPort;
 
     private RecogniserController recogniser;
 
 
-    public Messenger(Context UIContext, String ip, int port) {
+    public Messenger(Context UIContext, String ip, String port) {
         this.serverIP = ip;
         this.serverPort = port;
 

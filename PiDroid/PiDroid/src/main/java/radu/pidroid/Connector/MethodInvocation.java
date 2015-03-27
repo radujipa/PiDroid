@@ -6,7 +6,7 @@
 */
 
 
-package radu.pidroid.Recogniser;
+package radu.pidroid.Connector;
 
 import android.content.Context;
 import android.util.Log;
@@ -18,7 +18,7 @@ import radu.pidroid.MjpegViewer.MjpegView;
 import radu.pidroid.R;
 
 
-public class CommandRecogniser {
+public class MethodInvocation {
 
     //
     public final static int FORWARD_COMMAND      = 0;
@@ -45,13 +45,11 @@ public class CommandRecogniser {
 
     private final Context UIContext;
     private final Messenger mMessenger;
-    private final MjpegView mjpegView;
 
 
-    public CommandRecogniser(Context context, Messenger messenger, MjpegView mjpegView) {
+    public MethodInvocation(Context context, Messenger messenger) {
         this.UIContext = context;
         this.mMessenger = messenger;
-        this.mjpegView = mjpegView;
 
         // Initialise the data structure with commands from /values/voice_commands
         for (int index = 0; index < resources.length; index++)
@@ -116,12 +114,11 @@ public class CommandRecogniser {
                     break;
 
                 case LEARN_OBJECT_COMMAND:
-
                     break;
 
                 default:
-                    Log.e("CommandRecogniser: recogniseCommand(): ", "switch fell through default");
+                    Log.e("recogniseCommand(): ", "switch fell through default");
             } // switch
     } // recogniseExecuteCommand
 
-} // CommandRecogniser
+} // MethodInvocation

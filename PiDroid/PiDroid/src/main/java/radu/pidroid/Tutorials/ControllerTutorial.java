@@ -13,7 +13,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.WindowManager;
 
-import radu.pidroid.Controller;
+import radu.pidroid.Activities.Controller;
 
 
 public class ControllerTutorial {
