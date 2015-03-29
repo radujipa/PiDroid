@@ -32,6 +32,8 @@ public class VoiceControls implements View.OnClickListener, Controller.ActivityR
     public VoiceControls(Controller controller, MethodInvocation invocator) {
         this.controller = controller;
         this.invocator = invocator;
+
+        controller.setActivityResultListener(this);
     } // constructor
 
 

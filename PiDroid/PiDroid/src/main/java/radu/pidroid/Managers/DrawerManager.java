@@ -49,8 +49,9 @@ public class DrawerManager implements ExpandableListView.OnGroupClickListener {
     private HashMap<DrawerItem, List<DrawerItem>> childData;
 
 
-    public DrawerManager(Controller controller, ControlsManager controls, VideoFeedManager videoFeed,
-                         SettingsManager settings, Messenger messenger) {
+    public DrawerManager(Controller controller, SettingsManager settings, ControlsManager controls,
+                         VideoFeedManager videoFeed, Messenger messenger) {
+
         this.controller = controller;
         this.controls = controls;
         this.settings = settings;
@@ -153,7 +154,7 @@ public class DrawerManager implements ExpandableListView.OnGroupClickListener {
         ((DrawerRow) parentData.get(1)).setRowFunction(new DrawerRow.ToggleSettings() {
             @Override
             public void toggle() {
-                controls.setControls(Controls.TOUCH_GYRO);
+                controls.setControls(Controls.TOUCH_GYRO.getID());
                 mDrawerLayout.closeDrawer(mDrawerListView);
                 Toast.makeText(parentData.get(1).getUIContext(), "Touch controls have been set", Toast.LENGTH_SHORT).show();
             } // toggle
@@ -163,7 +164,7 @@ public class DrawerManager implements ExpandableListView.OnGroupClickListener {
         ((DrawerRow) parentData.get(2)).setRowFunction(new DrawerRow.ToggleSettings() {
             @Override
             public void toggle() {
-                controls.setControls(Controls.SLIDER_GYRO);
+                controls.setControls(Controls.SLIDER_GYRO.getID());
                 mDrawerLayout.closeDrawer(mDrawerListView);
                 Toast.makeText(parentData.get(2).getUIContext(), "Slider controls have been set", Toast.LENGTH_SHORT).show();
             } // toggle
@@ -173,7 +174,7 @@ public class DrawerManager implements ExpandableListView.OnGroupClickListener {
         ((DrawerRow) parentData.get(3)).setRowFunction(new DrawerRow.ToggleSettings() {
             @Override
             public void toggle() {
-                controls.setControls(Controls.JOYSTICKS);
+                controls.setControls(Controls.JOYSTICKS.getID());
                 mDrawerLayout.closeDrawer(mDrawerListView);
                 Toast.makeText(parentData.get(3).getUIContext(), "Joystick controls have been set", Toast.LENGTH_SHORT).show();
             } // toggle
@@ -239,9 +240,9 @@ public class DrawerManager implements ExpandableListView.OnGroupClickListener {
                 videoFeed.setCameraStabilisation(settings.cameraStabilisationON);
 
                 if (settings.cameraStabilisationON)
-                    Toast.makeText(parentData.get(15).getUIContext(), "Camera stabilisation is now ON", Toast.LENGTH_LONG).show();
+                    Toast.makeText(parentData.get(12).getUIContext(), "Camera stabilisation is now ON", Toast.LENGTH_LONG).show();
                 else
-                    Toast.makeText(parentData.get(15).getUIContext(), "Camera stabilisation is now OFF", Toast.LENGTH_LONG).show();
+                    Toast.makeText(parentData.get(12).getUIContext(), "Camera stabilisation is now OFF", Toast.LENGTH_LONG).show();
             } // toggle
         });
 
@@ -258,9 +259,8 @@ public class DrawerManager implements ExpandableListView.OnGroupClickListener {
         ((DrawerRow) parentData.get(14)).setRowFunction(new DrawerRow.ToggleSettings() {
             @Override
             public void toggle() {
-                if (controls.levelIndicatorImageView.getVisibility() == View.VISIBLE)
-                    controls.levelIndicatorImageView.setVisibility(View.INVISIBLE);
-                else controls.levelIndicatorImageView.setVisibility(View.VISIBLE);
+                settings.levelIndicatorON = !settings.levelIndicatorON;
+                controls.levelIndicatorImageView.setVisibility(settings.levelIndicatorON ? View.VISIBLE : View.INVISIBLE);
             } // toggle
         });
 
@@ -272,9 +272,9 @@ public class DrawerManager implements ExpandableListView.OnGroupClickListener {
                 mDrawerLayout.closeDrawer(mDrawerListView);
 
                 if (settings.tutorialsON)
-                    Toast.makeText(parentData.get(18).getUIContext(), "Tutorials are now ON", Toast.LENGTH_LONG).show();
+                    Toast.makeText(parentData.get(15).getUIContext(), "Tutorials are now ON", Toast.LENGTH_LONG).show();
                 else
-                    Toast.makeText(parentData.get(18).getUIContext(), "Tutorials are now OFF", Toast.LENGTH_LONG).show();
+                    Toast.makeText(parentData.get(15).getUIContext(), "Tutorials are now OFF", Toast.LENGTH_LONG).show();
             } // toggle
         });
     } // createDrawerRows

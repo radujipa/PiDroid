@@ -47,7 +47,8 @@ public class GyroscopeControls implements SensorsManager.TiltListener {
     public void onTilt(int tiltAngle) {
         //
         if (controls.levelIndicatorImageView.getVisibility() == View.VISIBLE
-                && tiltAngle < 90 + settings.maximumTiltAngle && tiltAngle > 90 - settings.maximumTiltAngle) {
+                && tiltAngle <= 90 + settings.maximumTiltAngle
+                && tiltAngle >= 90 - settings.maximumTiltAngle) {
             controls.levelIndicatorImageView.setRotation(tiltAngle - 90);
         } // if
 
@@ -60,7 +61,7 @@ public class GyroscopeControls implements SensorsManager.TiltListener {
 
         this.tiltAngle = tiltAngle;
         notifyRobot();
-        Log.d("tiltControls():", "tilt angle = " + tiltAngle);
+        Log.d("GyroscopeControls:", "tiltControls(): tiltAngle = " + tiltAngle);
     } // onTilt
 
 } // GyroscopeControls

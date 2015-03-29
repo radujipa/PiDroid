@@ -8,6 +8,7 @@
 
 package radu.pidroid.Activities;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,6 +42,9 @@ public class Main extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        ActionBar actionBar = getActionBar();
+        actionBar.hide();
+
         ipTextField   = (EditText) findViewById(R.id.ipTextField);
         portTextField = (EditText) findViewById(R.id.portTextField);
         detailsCheckBox = (CheckBox) findViewById(R.id.detailsCheckBox);
@@ -55,6 +59,20 @@ public class Main extends Activity implements View.OnClickListener {
         ipTextField.setText(settings.serverIP);
         portTextField.setText(settings.serverPort);
     } // onCreate
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        settings.load();
+    } // onResume
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        settings.save();
+    } // onPause
 
 
     @Override
@@ -74,7 +92,7 @@ public class Main extends Activity implements View.OnClickListener {
 
                 settings.serverIP = ipTextField.getText().toString();
                 settings.serverPort = portTextField.getText().toString();
-                settings.save();
+                //settings.save();
 
                 // pass the boolean to the Controller activity with an Intent and start the Controller
                 Intent intent = new Intent(this, Controller.class);

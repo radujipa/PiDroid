@@ -13,6 +13,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import radu.pidroid.Managers.SettingsManager;
+
 
 public class Messenger {
 
@@ -31,16 +33,18 @@ public class Messenger {
     public final static int PIDROID_CLEAR_LEARNING_DATA = 2;
 
 
-    private TCPClient mTCPClient;
-    private String serverIP;
-    private String serverPort;
+    // references to modules
+    private SettingsManager settings;
 
+    //
+    private TCPClient mTCPClient;
+
+    //
     private RecogniserController recogniser;
 
 
-    public Messenger(Context UIContext, String ip, String port) {
-        this.serverIP = ip;
-        this.serverPort = port;
+    public Messenger(Context UIContext, SettingsManager settings) {
+        this.settings = settings;
 
         new MessagingTask(UIContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
     } // constructor
@@ -152,8 +156,8 @@ public class Messenger {
 
 
     public interface RecogniserController {
-        public void onLearnNewObjectReply();
-        public void onRecogniseObjectReply(int objType);
+        void onLearnNewObjectReply();
+        void onRecogniseObjectReply(int objType);
     } // RecogniserController
 
 
@@ -180,7 +184,7 @@ public class Messenger {
         protected TCPClient doInBackground(String... message) {
             try {
                 // Create a TCPClient object and set a MessageReceivedListener
-                mTCPClient = new TCPClient(serverIP, serverPort);
+                mTCPClient = new TCPClient(settings.serverIP, settings.serverPort);
                 mTCPClient.setMessageReceivedListener(new TCPClient.MessageReceivedListener() {
                     @Override
                     public void OnMessageReceived(String message) {

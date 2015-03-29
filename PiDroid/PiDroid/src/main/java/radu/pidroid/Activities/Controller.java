@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.ImageView;
 
@@ -32,8 +33,7 @@ public class Controller extends Activity {
 
     //
     public ImageView hudImageView;
-    public final int[] hudResources = new int[] { R.drawable.hud_clean_1366x768,
-                                                  R.drawable.hud_lines_1366x768 };
+    public int[] hudResources;
 
     //
     public DrawerManager drawer;
@@ -69,27 +69,30 @@ public class Controller extends Activity {
         ActionBar actionBar = getActionBar();
         actionBar.hide();
 
-        hudImageView = (ImageView) findViewById(R.id.hudImageView);
-
         // get the boolean passed from Main with an Intent
         Intent intent = getIntent();
         rememberDetailsON = intent.getBooleanExtra(Main.EXTRA_REMEMBER_DETAILS_ON, false);
 
-        messenger = new Messenger(this, settings.serverIP, settings.serverPort);
-        invocator = new MethodInvocation(this, messenger);
-
-        drawer = new DrawerManager(this, controls, videoFeed, settings, messenger);
-        settings = new SettingsManager(this);
-        controls = new ControlsManager(this, settings, videoFeed, messenger, invocator);
-
-        sensors = new SensorsManager(this, controls);
-        sensors.start();
-
         settings = new SettingsManager(this);
         settings.load();
 
-        drawer.setup();
+        hudImageView = (ImageView) findViewById(R.id.hudImageView);
+        hudResources = new int[] { R.drawable.hud_clean_1366x768, R.drawable.hud_lines_1366x768 };
+        hudImageView.setImageResource(hudResources[settings.currentHUDIndex]);
+
+        messenger = new Messenger(this, settings);
+        invocator = new MethodInvocation(this, messenger);
+
+        sensors = new SensorsManager(this);
+        sensors.start();
+
+        videoFeed = new VideoFeedManager(this, settings, sensors);
         videoFeed.start();
+
+        controls = new ControlsManager(this, settings, sensors, videoFeed, messenger, invocator);
+
+        drawer = new DrawerManager(this, settings, controls, videoFeed, messenger);
+        drawer.setup();
 
         if (settings.tutorialsON)
             new ControllerTutorial(this, controls, drawer).start();
@@ -105,8 +108,8 @@ public class Controller extends Activity {
         // TODO: video.start(); ?
 
         //
-        if (rememberDetailsON) settings.load();
-        else settings.clear();
+        if (rememberDetailsON)  settings.load();
+        else                    settings.clear();
     } // onResume
 
 
@@ -119,7 +122,7 @@ public class Controller extends Activity {
         videoFeed.stop();
 
         //
-        if (rememberDetailsON) settings.save();
+        if (rememberDetailsON)  settings.save();
     } // onPause
 
 

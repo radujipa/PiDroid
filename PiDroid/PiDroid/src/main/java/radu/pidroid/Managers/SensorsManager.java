@@ -23,8 +23,6 @@ public class SensorsManager implements SensorEventListener {
     // custom listeners
     private TiltListener tiltListener;
 
-    // references to modules
-    private ControlsManager controls;
 
     // Android SDK sensor managers
     private SensorManager mSensorManager;
@@ -36,11 +34,10 @@ public class SensorsManager implements SensorEventListener {
 
     //
     public int tiltAngle;
+    private boolean sensorsON;
 
 
-    public SensorsManager(Controller controller, ControlsManager controls) {
-        this.controls = controls;
-
+    public SensorsManager(Controller controller) {
         mSensorManager = (SensorManager) controller.getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mGeomagnetic   = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -48,6 +45,7 @@ public class SensorsManager implements SensorEventListener {
         this.accelerometerData = new float[3];
         this.geomagneticData = new float[3];
         this.tiltAngle = 0;
+        this.sensorsON = false;
     } // constructor
 
 
@@ -61,20 +59,17 @@ public class SensorsManager implements SensorEventListener {
 
             case Sensor.TYPE_MAGNETIC_FIELD:
                 geomagneticData = event.values;
-
-                if (controls.tiltControlsON) computeTiltAngle();
+                computeTiltAngle();
                 break;
 
             default:
-                Log.e("onSensorChanged():", "fell through default case!");
+                Log.e("SensorsManager:", "onSensorChanged(): fell through default case!");
         } // switch
     } // onSensorChanged
 
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // Do something here if sensor accuracy changes.
-        // You must implement this callback in your code.
     } // onAccuracyChanged
 
 
@@ -93,18 +88,27 @@ public class SensorsManager implements SensorEventListener {
         if (tiltAngle != newTiltAngle) {
             tiltAngle = newTiltAngle;
             tiltListener.onTilt(tiltAngle);
+            Log.d("SensorsManager:", "computeTiltAngle(): tiltAngle = " + tiltAngle);
         }
     } // computeTiltAngle
 
 
     public void start() {
-        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-        mSensorManager.registerListener(this, mGeomagnetic, SensorManager.SENSOR_DELAY_FASTEST);
+        if (!sensorsON) {
+            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+            mSensorManager.registerListener(this, mGeomagnetic, SensorManager.SENSOR_DELAY_FASTEST);
+            sensorsON = true;
+            Log.d("SensorsManager:", "start(): listeners registered");
+        }
     } // registerSensors
 
 
     public void stop() {
-        mSensorManager.unregisterListener(this);
+        if (sensorsON) {
+            mSensorManager.unregisterListener(this);
+            sensorsON = false;
+            Log.d("SensorsManager:", "stop(): listeners unregistered");
+        }
     } // unregisterSensors
 
 

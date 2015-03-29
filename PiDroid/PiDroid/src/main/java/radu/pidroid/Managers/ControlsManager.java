@@ -69,9 +69,8 @@ public class ControlsManager implements View.OnClickListener {
     public ImageView speechButton;
 
 
-    // references to modules
-    private RoboticPlatform robot;
     private SettingsManager settings;
+    private SensorsManager sensors;
     private VideoFeedManager video;
     private Messenger messenger;
 
@@ -80,13 +79,14 @@ public class ControlsManager implements View.OnClickListener {
     public boolean spinControlON;
 
 
-    public ControlsManager(Controller controller, SettingsManager settings, VideoFeedManager video,
-                           Messenger messenger, MethodInvocation invocator) {
+    public ControlsManager(Controller controller, SettingsManager settings, SensorsManager sensors,
+                           VideoFeedManager video, Messenger messenger, MethodInvocation invocator) {
         this.settings = settings;
+        this.sensors = sensors;
         this.video = video;
         this.messenger = messenger;
 
-        this.robot = new RoboticPlatform(messenger);
+        RoboticPlatform robot = new RoboticPlatform(messenger);
 
         this.touchControls = new TouchControls(this, robot, settings);
         touchControlsLayout = (RelativeLayout) controller.findViewById(R.id.TouchControlsLayout);
@@ -106,6 +106,8 @@ public class ControlsManager implements View.OnClickListener {
 
         this.gyroscopeControls = new GyroscopeControls(this, robot, settings);
         levelIndicatorImageView = (ImageView) controller.findViewById(R.id.levelIndicatorImageView);
+        levelIndicatorImageView.setVisibility(settings.levelIndicatorON ? View.VISIBLE : View.INVISIBLE);
+        sensors.setTiltListener(gyroscopeControls);
 
         this.joystickControls = new JoystickControls(robot);
         joystickControlsLayout = (RelativeLayout) controller.findViewById(R.id.JoystickControlsLayout);
@@ -124,12 +126,15 @@ public class ControlsManager implements View.OnClickListener {
         speechButton = (ImageView) controller.findViewById(R.id.speechButton);
         speechButton.setOnClickListener(voiceControls);
 
+        this.tiltControlsON = true;
         this.spinControlON = false;
+
+        setControls(settings.controlsID);
     } // constructor
 
 
-    public void setControls(Controls controls) {
-        if (controls.getID() == Controls.TOUCH_GYRO.getID()) {
+    public void setControls(int controlsID) {
+        if (controlsID == Controls.TOUCH_GYRO.getID()) {
             touchControlsLayout.setVisibility(View.VISIBLE);
             smallCameraJoystickView.setVisibility(View.VISIBLE);
             sliderControlsLayout.setVisibility(View.INVISIBLE);
@@ -138,7 +143,7 @@ public class ControlsManager implements View.OnClickListener {
             tiltControlsON = true;
         }
         else
-        if (controls.getID() == Controls.SLIDER_GYRO.getID()) {
+        if (controlsID == Controls.SLIDER_GYRO.getID()) {
             sliderControlsLayout.setVisibility(View.VISIBLE);
             smallCameraJoystickView.setVisibility(View.VISIBLE);
             touchControlsLayout.setVisibility(View.INVISIBLE);
@@ -147,7 +152,7 @@ public class ControlsManager implements View.OnClickListener {
             tiltControlsON = true;
         }
         else
-        if (controls.getID() == Controls.JOYSTICKS.getID()) {
+        if (controlsID == Controls.JOYSTICKS.getID()) {
             joystickControlsLayout.setVisibility(View.VISIBLE);
             touchControlsLayout.setVisibility(View.INVISIBLE);
             sliderControlsLayout.setVisibility(View.INVISIBLE);
@@ -156,10 +161,11 @@ public class ControlsManager implements View.OnClickListener {
             tiltControlsON = false;
         }
         else {
-            Log.e("setControls():", "fell through default case controlsID = " + settings.controlsID);
+            Log.e("setControls():", "fell through default case controlsID = " + controlsID);
             return;
         }
-        settings.controlsID = controls.getID();
+        updateSensorsState();
+        settings.controlsID = controlsID;
     } // setControls
 
 
@@ -185,6 +191,13 @@ public class ControlsManager implements View.OnClickListener {
             default:
                 Log.e("onClick()", "fell through default case!");
         } // switch
+        updateSensorsState();
     } // onClick
+
+
+    private void updateSensorsState() {
+        if (tiltControlsON)  sensors.start();
+        else                 sensors.stop();
+    } // updateSensorsState
 
 } // ControlsManager

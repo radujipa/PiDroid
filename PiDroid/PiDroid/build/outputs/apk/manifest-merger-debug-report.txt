@@ -37,7 +37,7 @@ MERGED from com.android.support:appcompat-v7:18.0.0:19:5
 		ADDED from AndroidManifest.xml:15:9
 	android:theme
 		ADDED from AndroidManifest.xml:17:9
-activity#radu.pidroid.Main
+activity#radu.pidroid.Activities.Main
 ADDED from AndroidManifest.xml:18:9
 	android:label
 		ADDED from AndroidManifest.xml:20:13
@@ -53,7 +53,7 @@ category#android.intent.category.LAUNCHER
 ADDED from AndroidManifest.xml:24:17
 	android:name
 		ADDED from AndroidManifest.xml:24:27
-activity#radu.pidroid.Controller
+activity#radu.pidroid.Activities.Controller
 ADDED from AndroidManifest.xml:27:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:30:13

@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="radu.pidroid.Main"
+            android:name="radu.pidroid.Activities.Main"
             android:label="PiDroid" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="radu.pidroid.Controller"
+            android:name="radu.pidroid.Activities.Controller"
             android:label="PiDroid Controller"
             android:screenOrientation="landscape" >
         </activity>

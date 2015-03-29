@@ -78,7 +78,7 @@ public class ControllerTutorial {
                                 "LEFT one for camera and RIGHT for driving.", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                controls.setControls(Controls.TOUCH_GYRO);
+                                controls.setControls(Controls.TOUCH_GYRO.getID());
                                 controls.toggleSpinImageView.setBackgroundColor(Color.argb(150, 0, 255, 0)); // green
                                 controls.largeCameraJoystickView.setBackgroundColor(0); // clear colour
                                 controls.directionJoystickView.setBackgroundColor(0);
@@ -93,7 +93,7 @@ public class ControllerTutorial {
                                 + "corresponding direction. The gyro will do the work.", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                controls.setControls(Controls.JOYSTICKS);
+                                controls.setControls(Controls.JOYSTICKS.getID());
                                 controls.largeCameraJoystickView.setBackgroundColor(Color.argb(150, 0, 255, 0)); // green
                                 controls.directionJoystickView.setBackgroundColor(Color.argb(150, 0, 255, 0));
                                 joystickTutorial.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
@@ -120,7 +120,7 @@ public class ControllerTutorial {
                                 + "Drag to open and quickly make changes.", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                controls.setControls(Controls.TOUCH_GYRO);
+                                controls.setControls(Controls.TOUCH_GYRO.getID());
                                 drawer.closeDrawer();
                                 controls.forwardsPowerImageView.setBackgroundColor(Color.argb(150, 0, 255, 0));  // green
                                 controls.backwardsPowerImageView.setBackgroundColor(Color.argb(150, 255, 0, 0)); // red

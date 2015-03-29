@@ -31,17 +31,18 @@ public class VideoFeedManager implements SensorsManager.TiltListener {
     private SettingsManager settings;
 
     //
-    public MjpegView videoFeedMjpegView;
+    private MjpegView videoFeedMjpegView;
     private VideoFeedTask videoFeedTask;
 
     //
     public boolean videoFeedON;
 
 
-    public VideoFeedManager(Controller controller, SensorsManager sensors, SettingsManager settings) {
+    public VideoFeedManager(Controller controller, SettingsManager settings, SensorsManager sensors) {
         this.settings = settings;
 
         videoFeedMjpegView = (MjpegView) controller.findViewById(R.id.videoFeedSurfaceView);
+        videoFeedMjpegView.setCameraStabilisation(settings.cameraStabilisationON);
         sensors.setTiltListener(this);
 
         this.videoFeedTask = null;
@@ -50,7 +51,7 @@ public class VideoFeedManager implements SensorsManager.TiltListener {
 
 
     public boolean start() {
-        String URL = "http://" + settings.serverIP + ":" + (settings.serverPort + 1) + "/?action=stream";
+        String URL = "http://" + settings.serverIP + ":" + (Integer.parseInt(settings.serverPort) + 1) + "/?action=stream";
 
         try {
             videoFeedTask = new VideoFeedTask();
