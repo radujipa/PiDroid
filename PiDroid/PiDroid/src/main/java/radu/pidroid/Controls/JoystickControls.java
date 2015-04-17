@@ -48,7 +48,7 @@ public class JoystickControls implements JoystickView.MoveListener {
         // TODO: why *101 for percentage conversion? remove modulo?
         int newX = ((int)(x * 101)) / 20 * 20;
         int newY = ((int)(y * 101)) / 20 * -20;  // TODO: why invert?
-        Log.d("onMove():", "x = " + x + ", y = " + y);
+        Log.d("JoystickControls", "onMove(): x = " + x + ", y = " + y);
 
         switch (view.getId()) {
 
@@ -62,24 +62,25 @@ public class JoystickControls implements JoystickView.MoveListener {
                 break;
 
             case R.id.directionJoystickView:
-                int newTurnAngle;
+                int newTiltAngle;
                 // TODO: recheck this to make sure it's correct
                 // compute the angle made by the joystick measured with respect to the trigonometric circle
                 if (newX > 0)
-                    newTurnAngle = (int)(Math.toDegrees(Math.atan(Math.abs((double)newY / newX))));
+                    newTiltAngle = (int)(Math.toDegrees(Math.atan(Math.abs((double)newY / newX))));
                 else
-                    newTurnAngle = (int)(Math.toDegrees(Math.atan(Math.abs((double)newX / newY))) + 90);
-                Log.d("onMove():", "newTurnAngle = " + newTurnAngle);
+                    newTiltAngle = (int)(Math.toDegrees(Math.atan(Math.abs((double)newX / newY))) + 90);
+                Log.d("JoystickControls", "onMove(): newTiltAngle = " + newTiltAngle);
 
                 // If there is a new turnAngle (or turning angle), tell PiDroid about it.
-                if (power != newY || tiltAngle != newTurnAngle) {
-                    power = newY; tiltAngle = newTurnAngle;
+                if (power != newY || tiltAngle != newTiltAngle) {
+                    power = newY; tiltAngle = newTiltAngle;
                     shouldNotify = true;
                 } // if
                 break;
 
             default:
-                Log.e("onMove():", "fell through default case!");
+                Log.e("JoystickControls", "onMove(): fell through default case!");
+                return;
         } // switch
 
         if (shouldNotify) notifyRobot();
@@ -104,7 +105,7 @@ public class JoystickControls implements JoystickView.MoveListener {
                 break;
 
             default:
-                Log.e("onRelease():", "fell through default case!");
+                Log.e("JoystickControls", "onRelease():  fell through default case!");
         } // switch
     } // onRelease
 

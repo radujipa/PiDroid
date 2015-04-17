@@ -21,27 +21,38 @@ public class DrawerAdapter extends BaseExpandableListAdapter {
 
     /* Navigation drawer specifics */
     private final ExpandableListView listView;
+    private boolean singleItemExpandable;
+
     private final List<DrawerItem> parentData;
     private final HashMap<DrawerItem, List<DrawerItem>> childData;
 
 
-    public DrawerAdapter(ExpandableListView listView, List<DrawerItem> parentData, HashMap<DrawerItem, List<DrawerItem>> childData) {
+    public DrawerAdapter(ExpandableListView listView, List<DrawerItem> parentData,
+                         HashMap<DrawerItem, List<DrawerItem>> childData) {
+
         this.listView = listView;
+        this.singleItemExpandable = true;
         this.parentData = parentData;
         this.childData  = childData;
     } // constructor
+
+
+    public void setSingleItemExpandable(boolean singleItemExpandable) {
+        this.singleItemExpandable = singleItemExpandable;
+    } // setSingleItemExpandable
 
 
     //**********************************************************************************************
     //                                   DRAWER PARENT ITEM
     //**********************************************************************************************
 
+
     private int lastExpandedGroupPosition;
 
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        return parentData.get(groupPosition).getItemView();
+        return parentData.get(groupPosition).getView();
     } // getGroupView
 
 
@@ -53,7 +64,7 @@ public class DrawerAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getGroupId(int groupPosition) {
-        return parentData.get(groupPosition).getItemView().getId();
+        return parentData.get(groupPosition).getView().getId();
     } // getGroupId
 
 
@@ -72,7 +83,7 @@ public class DrawerAdapter extends BaseExpandableListAdapter {
     @Override
     public void onGroupExpanded(int groupPosition) {
 
-        if (groupPosition != lastExpandedGroupPosition)
+        if (groupPosition != lastExpandedGroupPosition && singleItemExpandable)
             listView.collapseGroup(lastExpandedGroupPosition);
 
         super.onGroupExpanded(groupPosition);
@@ -93,7 +104,7 @@ public class DrawerAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        return childData.get(parentData.get(groupPosition)).get(childPosition).getItemView();
+        return childData.get(parentData.get(groupPosition)).get(childPosition).getView();
     } // getChildView
 
 
@@ -105,7 +116,7 @@ public class DrawerAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        return childData.get(parentData.get(groupPosition)).get(childPosition).getItemView().getId();
+        return childData.get(parentData.get(groupPosition)).get(childPosition).getView().getId();
     } // getChildId
 
 

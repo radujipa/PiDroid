@@ -8,10 +8,11 @@
 
 package radu.pidroid.Robot;
 
+import radu.pidroid.Activities.Controller;
 import radu.pidroid.Connector.Messenger;
 
 
-public class CameraController {
+public class CameraController implements Controller.ActivityLifecycleListener {
 
     // the number by which we truncate the cameraX,Y values
     // e.g. cameraX = 0/20/40/60/80/100
@@ -26,8 +27,9 @@ public class CameraController {
     private int cameraX, cameraY;
 
 
-    public CameraController(Messenger messenger) {
+    public CameraController(Controller controller, Messenger messenger) {
         this.messenger = messenger;
+        controller.addActivityLifecycleListener(this);
 
         this.cameraX = this.cameraY = 0;
     } // constructor
@@ -44,5 +46,18 @@ public class CameraController {
             messenger.updateCameraPosition(cameraX, cameraY);
         } // if
     } // updateCameraPosition
+
+
+    @Override
+    public void onPause() {
+        // when the app pauses, we reset the camera position
+        updateCameraPosition(0, 0);
+    } // onPause
+
+
+    @Override
+    public void onResume() {
+        // when the app resumes, we do nothing here
+    } // onResume
 
 } // CameraController

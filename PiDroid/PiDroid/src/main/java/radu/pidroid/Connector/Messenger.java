@@ -13,10 +13,11 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import radu.pidroid.Activities.Controller;
 import radu.pidroid.Managers.SettingsManager;
 
 
-public class Messenger {
+public class Messenger implements Controller.ActivityLifecycleListener {
 
     public final static int PIDROID_ROVER_CONTROLLER = 0;
     public final static int PIDROID_SET_TURN_ANGLE = 0;
@@ -43,11 +44,24 @@ public class Messenger {
     private RecogniserController recogniser;
 
 
-    public Messenger(Context UIContext, SettingsManager settings) {
+    public Messenger(Controller controller, SettingsManager settings) {
         this.settings = settings;
+        controller.addActivityLifecycleListener(this);
 
-        new MessagingTask(UIContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+        new MessagingTask(controller).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
     } // constructor
+
+
+    @Override
+    public void onPause() {
+        stopMessenger();
+    } // onPause
+
+
+    @Override
+    public void onResume() {
+        // when the app resumes, we do nothing here
+    } // onResume
 
 
     //**********************************************************************************************
@@ -112,6 +126,7 @@ public class Messenger {
 
     public void stopMessenger() {
         mTCPClient.stopClient();
+        Log.d("Messenger", "stopMessenger(): stopping messaging thread..");
     } // stopMessenger
 
 
@@ -130,11 +145,11 @@ public class Messenger {
         switch (controller) {
 
         case PIDROID_CAMERA_CONTROLLER:
-            Log.d("dispatch():", "PIDROID_CAMERA_CONTROLLER nothing to do here");
+            Log.d("Messenger", "dispatch(): PIDROID_CAMERA_CONTROLLER nothing to do here");
             break;
 
         case PIDROID_ROVER_CONTROLLER:
-            Log.d("dispatch():", "PIDROID_ROVER_CONTROLLER nothing to do here");
+            Log.d("Messenger", "dispatch(): PIDROID_ROVER_CONTROLLER nothing to do here");
             break;
 
         case PIDROID_RECOGNISER_CONTROLLER:
@@ -144,7 +159,7 @@ public class Messenger {
             break;
 
         default:
-            Log.e("dispatch():", "Switch fell through default case " + "with controller = " + controller);
+            Log.e("Messenger", "dispatch(): Switch fell through default case with controller = " + controller);
         } // switch
 
     } // dispatch
@@ -185,7 +200,7 @@ public class Messenger {
             try {
                 // Create a TCPClient object and set a MessageReceivedListener
                 mTCPClient = new TCPClient(settings.serverIP, settings.serverPort);
-                mTCPClient.setMessageReceivedListener(new TCPClient.MessageReceivedListener() {
+                mTCPClient.addMessageReceivedListener(new TCPClient.MessageReceivedListener() {
                     @Override
                     public void OnMessageReceived(String message) {
                         //this method calls the onProgressUpdate
@@ -197,7 +212,7 @@ public class Messenger {
                 mTCPClient.startClient();
             } // try
             catch(TCPClient.TCPClientException exception) {
-                Log.e("MessagingTask:", "Failed to start client.");
+                Log.e("Messenger", "MessagingTask: failed to start client!");
                 publishProgress(null);
             } // catch
 

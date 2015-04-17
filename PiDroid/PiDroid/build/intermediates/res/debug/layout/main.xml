@@ -11,7 +11,7 @@
     <EditText
         android:layout_width="230dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="120dp"
         android:layout_centerHorizontal="true"
         android:id="@+id/ipTextField"
         android:hint="IP"/>
@@ -39,7 +39,7 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/detailsCheckBox"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="80dp"
         android:layout_centerHorizontal="true"
         android:id="@+id/connectButton"
         android:text="Connect" />

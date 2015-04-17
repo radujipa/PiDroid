@@ -14,9 +14,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.widget.ImageView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import radu.pidroid.Connector.Messenger;
 import radu.pidroid.Connector.MethodInvocation;
@@ -53,7 +55,8 @@ public class Controller extends Activity {
 
 
     //
-    ActivityResultListener activityResultListener;
+    private List<ActivityLifecycleListener> activityLifecycleListeners;
+    private List<ActivityResultListener> activityResultListeners;
 
 
     //**********************************************************************************************
@@ -67,33 +70,42 @@ public class Controller extends Activity {
         setContentView(R.layout.controller);
 
         ActionBar actionBar = getActionBar();
-        actionBar.hide();
+        if (actionBar != null) actionBar.hide();
 
         // get the boolean passed from Main with an Intent
         Intent intent = getIntent();
         rememberDetailsON = intent.getBooleanExtra(Main.EXTRA_REMEMBER_DETAILS_ON, false);
 
+        // initialising listeners
+        activityLifecycleListeners = new ArrayList<ActivityLifecycleListener>();
+        activityResultListeners = new ArrayList<ActivityResultListener>();
+
+        // loading the shared settings for the whole app
         settings = new SettingsManager(this);
         settings.load();
 
+        // loading the HUD overlay
         hudImageView = (ImageView) findViewById(R.id.hudImageView);
         hudResources = new int[] { R.drawable.hud_clean_1366x768, R.drawable.hud_lines_1366x768 };
         hudImageView.setImageResource(hudResources[settings.currentHUDIndex]);
 
+        // instantiating the networking layer
         messenger = new Messenger(this, settings);
         invocator = new MethodInvocation(this, messenger);
 
+        // creating the gyro sensor manager (it is managed by ControlsManager)
         sensors = new SensorsManager(this);
-        sensors.start();
 
+        // starting the video feed from the robot (it registers with ActivityLifecycleListener)
         videoFeed = new VideoFeedManager(this, settings, sensors);
-        videoFeed.start();
 
+        // creating the manager for all types of controls and associated UI elements
         controls = new ControlsManager(this, settings, sensors, videoFeed, messenger, invocator);
 
+        // setting up the NavigationDrawer used for quick settings
         drawer = new DrawerManager(this, settings, controls, videoFeed, messenger);
-        drawer.setup();
 
+        // showing a tutorial to get new users up to speed with the features
         if (settings.tutorialsON)
             new ControllerTutorial(this, controls, drawer).start();
     } // onCreate
@@ -103,13 +115,13 @@ public class Controller extends Activity {
     protected void onResume() {
         super.onResume();
 
-        //
-        sensors.start();
-        // TODO: video.start(); ?
+        // calling all listeners (SensorsManager, VideoFeedManager are registered here)
+        for (ActivityLifecycleListener listener : this.activityLifecycleListeners)
+            listener.onResume();
 
-        //
-        if (rememberDetailsON)  settings.load();
-        else                    settings.clear();
+        // if the user ticked 'Remember details' we load the settings, otherwise clear
+        if (rememberDetailsON) settings.load();
+        else                   settings.clear();
     } // onResume
 
 
@@ -117,12 +129,12 @@ public class Controller extends Activity {
     protected void onPause() {
         super.onPause();
 
-        //
-        sensors.stop();
-        videoFeed.stop();
+        // calling all listeners (SensorsManager, VideoFeedManager are registered here)
+        for (ActivityLifecycleListener listener : this.activityLifecycleListeners)
+            listener.onPause();
 
-        //
-        if (rememberDetailsON)  settings.save();
+        // if the user ticked 'Remember details' we save the settings
+        if (rememberDetailsON) settings.save();
     } // onPause
 
 
@@ -142,32 +154,40 @@ public class Controller extends Activity {
         .setIcon(android.R.drawable.ic_dialog_alert)
         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
-                //TODO: messenger.updateRoverSpeed(roverSpeed = 0);
-                messenger.updateRoverSpeed(0);
-                messenger.stopMessenger();
                 finish();
             } // onClick
         }) // .setPositiveButton
         .setNegativeButton(android.R.string.cancel, null)
         .create().show();
-
-        videoFeed.stop();
     } // onBackPressed
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        this.activityResultListener.onActivityResult(requestCode, resultCode, intent);
+        // calling all listeners (VoiceControls is registered here)
+        for (ActivityResultListener listener : this.activityResultListeners)
+            listener.onActivityResult(requestCode, resultCode, intent);
+
         super.onActivityResult(requestCode, resultCode, intent);
     } // onActivityResult
+
+
+    public interface ActivityLifecycleListener {
+        void onPause();
+        void onResume();
+    } // ActivityLifecycleListener
+
+    public void addActivityLifecycleListener(ActivityLifecycleListener listener) {
+        this.activityLifecycleListeners.add(listener);
+    } // addActivityLifecycleListener
 
 
     public interface ActivityResultListener {
         void onActivityResult(int requestCode, int resultCode, Intent intent);
     } // ActivityResultListener
 
-    public void setActivityResultListener(ActivityResultListener listener) {
-        this.activityResultListener = listener;
-    } // setActivityResultListener
+    public void addActivityResultListener(ActivityResultListener listener) {
+        this.activityResultListeners.add(listener);
+    } // addActivityResultListener
 
 } // Controller

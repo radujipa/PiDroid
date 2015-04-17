@@ -8,29 +8,26 @@
 
 package radu.pidroid.SettingsDrawer;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
 
 public abstract class DrawerItem {
 
-    private final Context UIContext;
-    private final View itemView;
+    private final Activity activity;
 
 
-    public DrawerItem(Context context, View itemView) {
-        this.UIContext = context;
-        this.itemView = itemView;
+    public DrawerItem(Activity activity) {
+        this.activity = activity;
     } // constructor
 
 
-    public View getItemView() {
-        return itemView;
-    } // getView
+    public Activity getActivity() {
+        return activity;
+    } // getActivity
 
 
-    public Context getUIContext() {
-        return UIContext;
-    } // getUIContext
+    public abstract View getView();
 
 } // DrawerItem

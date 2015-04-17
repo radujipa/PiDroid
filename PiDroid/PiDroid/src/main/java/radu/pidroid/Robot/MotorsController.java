@@ -8,10 +8,13 @@
 
 package radu.pidroid.Robot;
 
+import android.util.Log;
+
+import radu.pidroid.Activities.Controller;
 import radu.pidroid.Connector.Messenger;
 
 
-public class MotorsController {
+public class MotorsController implements Controller.ActivityLifecycleListener {
 
     // the number by which we truncate the motorsPower values
     // e.g. motorsPower = 0/20/40/60/80/100
@@ -39,11 +42,13 @@ public class MotorsController {
     private State motorsState;
 
 
-    public MotorsController(Messenger messenger) {
+    public MotorsController(Controller controller, Messenger messenger) {
         this.messenger = messenger;
+        controller.addActivityLifecycleListener(this);
 
         // initialising motors state
         this.motorsPower = 0;
+        this.turnAngle = 90;
         this.motorsDirection = Direction.FORWARDS;
         this.motorsState = State.STOPPED;
     } // constructor
@@ -62,6 +67,9 @@ public class MotorsController {
     public void updateMotorsPower(int power) {
         // if we're going backwards, we'll consider the motors power as being negative
         power = (motorsDirection == Direction.BACKWARDS) ? -power : power;
+
+        // make sure the state of the motors is set to STOPPED if the power is 0
+        if (power == 0) updateMotorsState(State.STOPPED);
 
         // to avoid fined grained motor speed updates, we'll truncate the
         // values we send to the motors to only a handful
@@ -86,5 +94,21 @@ public class MotorsController {
             messenger.updateTurnAngle(angle);
         }
     } // updateMotorsTurnAngle
+
+
+    @Override
+    public void onPause() {
+        updateMotorsDirection(Direction.FORWARDS);
+        updateMotorsPower(0);
+        updateMotorsState(State.STOPPED);
+        updateMotorsTurnAngle(90);
+        Log.d("MotorsController", "onPause(): stopped all motors");
+    } // onPause
+
+
+    @Override
+    public void onResume() {
+        // when the app resumes, we do nothing here
+    } // onResume
 
 } // MotorsController

@@ -99,7 +99,8 @@ public class TouchControls implements View.OnTouchListener {
                 break;
 
             default:
-                Log.e("onTouch():", "fell through default case!");
+                Log.e("TouchControls", "onTouch(): fell through default case!");
+                return true;
         } // switch
 
         //

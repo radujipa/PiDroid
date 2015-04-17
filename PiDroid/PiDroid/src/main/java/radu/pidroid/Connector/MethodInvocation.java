@@ -115,7 +115,8 @@ public class MethodInvocation {
                     break;
 
                 default:
-                    Log.e("recogniseCommand(): ", "switch fell through default");
+                    Log.e("MethodInvocation", "recogniseExecuteCommand(): fell through default case " +
+                            "with id = " + id);
             } // switch
     } // recogniseExecuteCommand
 

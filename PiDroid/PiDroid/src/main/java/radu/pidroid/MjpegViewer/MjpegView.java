@@ -263,7 +263,7 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
                             }
                         }
                     }catch (IOException e){
-                        Log.e("MjpegViewThread: run():", "something bad happened");
+                        Log.e("MjpegViewThread", "run(): something bad happened");
                     }finally {
                         if (canvas != null) mSurfaceHolder.unlockCanvasAndPost(canvas);
                     } // try-catch-finally

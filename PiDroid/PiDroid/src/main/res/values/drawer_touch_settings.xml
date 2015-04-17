@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Navigation Drawer Items -->
+    <string-array name="drawer_touch_settings">
+
+        <!-- header -->
+        <item>0,CONTROLS SETTINGS</item>
+
+        <!-- settings row item -->
+        <item>2,Maximum tilt angle</item>
+
+        <!-- settings row item -->
+        <item>2,Acceleration time</item>
+
+        <!-- settings row item -->
+        <item>2,Deceleration time</item>
+
+        <!-- settings row item -->
+        <item>2,Touch response</item>
+
+    </string-array>
+
+</resources>

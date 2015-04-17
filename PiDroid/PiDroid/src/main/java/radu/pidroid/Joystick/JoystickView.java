@@ -17,6 +17,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import radu.pidroid.R;
 
 
@@ -33,19 +36,22 @@ public class JoystickView extends View {
     private Context context;
     private String tag;
 
-    private MoveListener moveListener;
     private int activePointerID = MotionEvent.INVALID_POINTER_ID;
+
+    private List<MoveListener> moveListeners;
 
 
     public JoystickView(Context context) {
         super(context);
         this.context = context;
+        this.moveListeners = new ArrayList<MoveListener>();
     } // constructor
 
 
     public JoystickView(Context context, AttributeSet attributes) {
         super(context, attributes);
         this.context = context;
+        this.moveListeners = new ArrayList<MoveListener>();
     } // constructor
 
 
@@ -157,7 +163,8 @@ public class JoystickView extends View {
                 positionY = (int)getCentreY();
                 invalidate();
 
-                moveListener.onRelease(this);
+                for (MoveListener listener : this.moveListeners)
+                    listener.onRelease(this);
                 activePointerID = MotionEvent.INVALID_POINTER_ID;
                 break;
 
@@ -218,7 +225,8 @@ public class JoystickView extends View {
         double strengthX = (positionX - getCentreX()) / maxDistanceFromCentre;
         double strengthY = (positionY - getCentreY()) / maxDistanceFromCentre;
 
-        moveListener.onMove(this, strengthX, strengthY);
+        for (MoveListener listener : this.moveListeners)
+            listener.onMove(this, strengthX, strengthY);
     } // onActionMoveEvent
 
 
@@ -233,8 +241,8 @@ public class JoystickView extends View {
     } // MoveListener
 
 
-    public void setMoveListener(MoveListener listener) {
-        this.moveListener = listener;
-    } // setMoveListener
+    public void addMoveListener(MoveListener listener) {
+        this.moveListeners.add(listener);
+    } // addMoveListener
 
 } // JoystickView

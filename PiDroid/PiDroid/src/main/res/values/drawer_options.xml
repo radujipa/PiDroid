@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Navigation Drawer Items -->
+    <string-array name="drawer_options">
+
+        <!-- header -->
+        <item>0,MORE OPTIONS</item>
+
+        <!-- row item -->
+        <item>1,Camera stabilisation</item>
+
+        <!-- row item -->
+        <item>1,Change HUD</item>
+
+        <!-- row item -->
+        <item>1,Level indicator</item>
+
+        <!-- row item -->
+        <item>1,Tutorials</item>
+
+    </string-array>
+
+</resources>

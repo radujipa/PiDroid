@@ -25,7 +25,7 @@ import radu.pidroid.MjpegViewer.MjpegView;
 import radu.pidroid.R;
 
 
-public class VideoFeedManager implements SensorsManager.TiltListener {
+public class VideoFeedManager implements SensorsManager.TiltListener, Controller.ActivityLifecycleListener {
 
     // references to modules
     private SettingsManager settings;
@@ -39,6 +39,7 @@ public class VideoFeedManager implements SensorsManager.TiltListener {
 
 
     public VideoFeedManager(Controller controller, SettingsManager settings, SensorsManager sensors) {
+        controller.addActivityLifecycleListener(this);
         this.settings = settings;
 
         videoFeedMjpegView = (MjpegView) controller.findViewById(R.id.videoFeedSurfaceView);
@@ -50,6 +51,22 @@ public class VideoFeedManager implements SensorsManager.TiltListener {
     } // constructor
 
 
+    @Override
+    public void onPause() {
+        // when the app is paused, turn off the stream
+        Log.d("VideoFeedManager", "onPause(): stopping video feed");
+        stop();
+    } // onPause
+
+
+    @Override
+    public void onResume() {
+        // when the app is resumed, restart the stream
+        Log.d("VideoFeedManager", "onResume(): restarting video feed");
+        start();
+    } // onResume
+
+
     public boolean start() {
         String URL = "http://" + settings.serverIP + ":" + (Integer.parseInt(settings.serverPort) + 1) + "/?action=stream";
 
@@ -57,7 +74,7 @@ public class VideoFeedManager implements SensorsManager.TiltListener {
             videoFeedTask = new VideoFeedTask();
             videoFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, URL);
         } catch (Exception exception) {
-            Log.e("setupVideoFeed():", "Could not connect to host!");
+            Log.e("VideoFeedManager", "setupVideoFeed(): could not connect to host!");
             return false;
         } // try-catch
 
@@ -92,10 +109,10 @@ public class VideoFeedManager implements SensorsManager.TiltListener {
             HttpParams httpParams = httpClient.getParams();
             HttpConnectionParams.setConnectionTimeout(httpParams, 5 * 1000);
 
-            Log.d("VideoFeedTask:", "1. Sending http request");
+            Log.d("VideoFeedTask", "1. Sending http request");
             try {
                 res = httpClient.execute(new HttpGet(URI.create(url[0])));
-                Log.d("VideoFeedTask:", "2. Request finished, status = " + res.getStatusLine().getStatusCode());
+                Log.d("VideoFeedTask", "2. Request finished, status = " + res.getStatusLine().getStatusCode());
                 if(res.getStatusLine().getStatusCode()==401){
                     // You must turn off camera User Access Control before this will work
                     return null;
@@ -103,7 +120,7 @@ public class VideoFeedManager implements SensorsManager.TiltListener {
                 return new MjpegInputStream(res.getEntity().getContent());
             } catch (Exception e) {
                 //e.printStackTrace();
-                Log.e("VideoFeedTask:", "Caught exception: ", e.getCause());
+                Log.e("VideoFeedTask", "Caught exception: ", e.getCause());
             } // try-catch
             return null;
         }

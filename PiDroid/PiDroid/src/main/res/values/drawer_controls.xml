@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Navigation Drawer Items -->
+    <string-array name="drawer_controls">
+
+        <!-- header item -->
+        <item>0,CONTROLS</item>
+
+        <!-- row item -->
+        <item>1,Touch and Gyro</item>
+
+        <!-- row item -->
+        <item>1,Sliders and Gyro</item>
+
+        <!-- row item -->
+        <item>1,Joysticks</item>
+
+    </string-array>
+
+</resources>

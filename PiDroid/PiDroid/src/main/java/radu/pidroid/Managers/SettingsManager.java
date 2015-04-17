@@ -12,10 +12,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.view.View;
 
-import radu.pidroid.Activities.Controller;
-import radu.pidroid.Activities.Main;
 import radu.pidroid.Managers.ControlsManager.Controls;
 
 
@@ -80,7 +77,7 @@ public class SettingsManager {
         cameraStabilisationON = preferences.getBoolean(EXTRA_CAMERA_STABILISATION_ON, true);
         tutorialsON = preferences.getBoolean(EXTRA_TUTORIALS_ON, true);
 
-        Log.d("SettingsManager:", "load(): all settings loaded");
+        Log.d("SettingsManager", "load(): all settings loaded");
     } // load
 
 
@@ -104,7 +101,7 @@ public class SettingsManager {
         editor.putBoolean(EXTRA_TUTORIALS_ON, tutorialsON);
 
         editor.apply();
-        Log.d("SettingsManager:", "save(): all settings saved");
+        Log.d("SettingsManager", "save(): all settings saved");
     } // save
 
 
@@ -112,7 +109,7 @@ public class SettingsManager {
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.apply();
-        Log.d("SettingsManager:", "clear(): all settings cleared");
+        Log.d("SettingsManager", "clear(): all settings cleared");
     } // clear
 
 } // SettingsManager

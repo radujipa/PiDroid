@@ -43,7 +43,7 @@ public class Main extends Activity implements View.OnClickListener {
         setContentView(R.layout.main);
 
         ActionBar actionBar = getActionBar();
-        actionBar.hide();
+        if (actionBar != null) actionBar.hide();
 
         ipTextField   = (EditText) findViewById(R.id.ipTextField);
         portTextField = (EditText) findViewById(R.id.portTextField);
@@ -101,7 +101,7 @@ public class Main extends Activity implements View.OnClickListener {
                 break;
 
             default:
-                Log.e("onClick(): ", "fell through default case!");
+                Log.e("Main", "onClick(): fell through default case!");
         } // switch
     } // onClick
 

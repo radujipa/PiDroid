@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import radu.pidroid.Activities.Controller;
 import radu.pidroid.Connector.Messenger;
@@ -28,7 +29,7 @@ import radu.pidroid.R;
 import radu.pidroid.Robot.RoboticPlatform;
 
 
-public class ControlsManager implements View.OnClickListener {
+public class ControlsManager implements View.OnClickListener, Controller.ActivityLifecycleListener {
 
     //
     public enum Controls {
@@ -68,7 +69,7 @@ public class ControlsManager implements View.OnClickListener {
     public VoiceControls voiceControls;
     public ImageView speechButton;
 
-
+    private Controller controller;
     private SettingsManager settings;
     private SensorsManager sensors;
     private VideoFeedManager video;
@@ -81,12 +82,16 @@ public class ControlsManager implements View.OnClickListener {
 
     public ControlsManager(Controller controller, SettingsManager settings, SensorsManager sensors,
                            VideoFeedManager video, Messenger messenger, MethodInvocation invocator) {
+
+        controller.addActivityLifecycleListener(this);
+
+        this.controller = controller;
         this.settings = settings;
         this.sensors = sensors;
         this.video = video;
         this.messenger = messenger;
 
-        RoboticPlatform robot = new RoboticPlatform(messenger);
+        RoboticPlatform robot = new RoboticPlatform(controller, messenger);
 
         this.touchControls = new TouchControls(this, robot, settings);
         touchControlsLayout = (RelativeLayout) controller.findViewById(R.id.TouchControlsLayout);
@@ -112,11 +117,11 @@ public class ControlsManager implements View.OnClickListener {
         this.joystickControls = new JoystickControls(robot);
         joystickControlsLayout = (RelativeLayout) controller.findViewById(R.id.JoystickControlsLayout);
         directionJoystickView = (JoystickView) controller.findViewById(R.id.directionJoystickView);
-        directionJoystickView.setMoveListener(joystickControls);
+        directionJoystickView.addMoveListener(joystickControls);
         largeCameraJoystickView = (JoystickView) controller.findViewById(R.id.largeCameraJoystickView);
-        largeCameraJoystickView.setMoveListener(joystickControls);
+        largeCameraJoystickView.addMoveListener(joystickControls);
         smallCameraJoystickView = (JoystickView) controller.findViewById(R.id.cameraJoystickView);
-        smallCameraJoystickView.setMoveListener(joystickControls);
+        smallCameraJoystickView.addMoveListener(joystickControls);
         smallCameraJoystickView.setTag("smallCamera");
 
         toggleSpinImageView = (ImageView) controller.findViewById(R.id.toggleSpinImageView);
@@ -139,8 +144,8 @@ public class ControlsManager implements View.OnClickListener {
             smallCameraJoystickView.setVisibility(View.VISIBLE);
             sliderControlsLayout.setVisibility(View.INVISIBLE);
             joystickControlsLayout.setVisibility(View.INVISIBLE);
-            video.setCameraStabilisation(settings.cameraStabilisationON);
             tiltControlsON = true;
+            Toast.makeText(controller, "Touch controls have been set", Toast.LENGTH_SHORT).show();
         }
         else
         if (controlsID == Controls.SLIDER_GYRO.getID()) {
@@ -148,8 +153,8 @@ public class ControlsManager implements View.OnClickListener {
             smallCameraJoystickView.setVisibility(View.VISIBLE);
             touchControlsLayout.setVisibility(View.INVISIBLE);
             joystickControlsLayout.setVisibility(View.INVISIBLE);
-            video.setCameraStabilisation(settings.cameraStabilisationON);
             tiltControlsON = true;
+            Toast.makeText(controller, "Slider controls have been set", Toast.LENGTH_SHORT).show();
         }
         else
         if (controlsID == Controls.JOYSTICKS.getID()) {
@@ -157,11 +162,12 @@ public class ControlsManager implements View.OnClickListener {
             touchControlsLayout.setVisibility(View.INVISIBLE);
             sliderControlsLayout.setVisibility(View.INVISIBLE);
             smallCameraJoystickView.setVisibility(View.INVISIBLE);
-            video.setCameraStabilisation(false);
             tiltControlsON = false;
+            Toast.makeText(controller, "Joystick controls have been set", Toast.LENGTH_SHORT).show();
         }
         else {
-            Log.e("setControls():", "fell through default case controlsID = " + controlsID);
+            Log.e("ControlsManager", "setControls(): fell through default case " +
+                    "with controlsID = " + controlsID);
             return;
         }
         updateSensorsState();
@@ -187,17 +193,40 @@ public class ControlsManager implements View.OnClickListener {
                 // notify the robot to toggle motor direction inversion
                 // i.e. left motors forwards, right motors backwards (for rovers / tanks)
                 messenger.toggleSpin(spinControlON);
+                break;
 
             default:
-                Log.e("onClick()", "fell through default case!");
+                Log.e("ControlsManager", "onClick(): fell through default case!");
+                return;
         } // switch
         updateSensorsState();
     } // onClick
 
 
     private void updateSensorsState() {
-        if (tiltControlsON)  sensors.start();
-        else                 sensors.stop();
+        if (tiltControlsON) {
+            sensors.start();
+            video.setCameraStabilisation(settings.cameraStabilisationON);
+        }
+        else {
+            sensors.stop();
+            levelIndicatorImageView.setRotation(0);
+            video.setCameraStabilisation(false);
+        }
     } // updateSensorsState
+
+
+    @Override
+    public void onPause() {
+        // when the Controller activity pauses, stop the sensors to save battery
+        if (tiltControlsON) sensors.stop();
+    } // onPause
+
+
+    @Override
+    public void onResume() {
+        // when the Controller activity resumes, turn the sensors back on
+        if (tiltControlsON) sensors.start();
+    } // onResume
 
 } // ControlsManager

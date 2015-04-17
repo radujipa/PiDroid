@@ -24,13 +24,16 @@ public final class R {
         public static final int camera_left_commands=0x7f050002;
         public static final int camera_right_commands=0x7f050003;
         public static final int camera_up_commands=0x7f050004;
-        public static final int drawer_items_list=0x7f050005;
-        public static final int forward_commands=0x7f050006;
-        public static final int object_names=0x7f050007;
-        public static final int object_recognition_commands=0x7f050008;
-        public static final int stop_reset_commands=0x7f050009;
-        public static final int turn_left_commands=0x7f05000a;
-        public static final int turn_right_commands=0x7f05000b;
+        public static final int drawer_controls=0x7f050005;
+        public static final int drawer_options=0x7f050006;
+        public static final int drawer_robot_settings=0x7f050007;
+        public static final int drawer_slider_settings=0x7f050008;
+        public static final int drawer_touch_settings=0x7f050009;
+        public static final int forward_commands=0x7f05000a;
+        public static final int object_recognition_commands=0x7f05000b;
+        public static final int stop_reset_commands=0x7f05000c;
+        public static final int turn_left_commands=0x7f05000d;
+        public static final int turn_right_commands=0x7f05000e;
     }
     public static final class attr {
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -807,7 +810,7 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f09002f;
         public static final int action_mode_bar_stub=0x7f09002e;
         public static final int action_mode_close_button=0x7f090022;
-        public static final int action_settings=0x7f090063;
+        public static final int action_settings=0x7f090064;
         public static final int activity_chooser_view_content=0x7f090023;
         public static final int always=0x7f090011;
         public static final int backwardsPowerImageView=0x7f090050;
@@ -817,9 +820,9 @@ containing a value of this type.
         public static final int cameraJoystickView=0x7f090047;
         public static final int checkbox=0x7f09002b;
         public static final int collapseActionView=0x7f090012;
-        public static final int connectButton=0x7f090062;
+        public static final int connectButton=0x7f090063;
         public static final int default_activity_button=0x7f090026;
-        public static final int detailsCheckBox=0x7f090061;
+        public static final int detailsCheckBox=0x7f090062;
         public static final int dialog=0x7f090016;
         public static final int directionJoystickView=0x7f09004c;
         public static final int disableHome=0x7f090007;
@@ -839,7 +842,8 @@ containing a value of this type.
         public static final int icon=0x7f090028;
         public static final int ifRoom=0x7f090013;
         public static final int image=0x7f090025;
-        public static final int ipTextField=0x7f09005f;
+        public static final int ipTextField=0x7f090060;
+        public static final int isToggledText=0x7f09005e;
         public static final int largeCameraJoystickView=0x7f09004b;
         public static final int left_icon=0x7f090031;
         public static final int levelIndicatorImageView=0x7f090046;
@@ -849,15 +853,15 @@ containing a value of this type.
         public static final int never=0x7f090014;
         public static final int none=0x7f090010;
         public static final int normal=0x7f090005;
-        public static final int portTextField=0x7f090060;
+        public static final int portTextField=0x7f090061;
         public static final int progress_circular=0x7f090034;
         public static final int progress_horizontal=0x7f090035;
         public static final int radio=0x7f09002d;
         public static final int right_container=0x7f090032;
         public static final int right_icon=0x7f090033;
-        public static final int rowDivider=0x7f09005a;
-        public static final int rowIconImageView=0x7f090058;
-        public static final int rowTextView=0x7f090059;
+        public static final int rowDivider=0x7f09005f;
+        public static final int rowIconImageView=0x7f09005c;
+        public static final int rowTextView=0x7f09005d;
         public static final int search_badge=0x7f090038;
         public static final int search_bar=0x7f090037;
         public static final int search_button=0x7f090039;
@@ -868,10 +872,10 @@ containing a value of this type.
         public static final int search_plate=0x7f09003c;
         public static final int search_src_text=0x7f09003d;
         public static final int search_voice_btn=0x7f090041;
-        public static final int settingsDivider=0x7f09005e;
-        public static final int settingsSeekBar=0x7f09005c;
+        public static final int settingsDivider=0x7f09005a;
+        public static final int settingsSeekBar=0x7f090058;
         public static final int settingsTextField=0x7f09005b;
-        public static final int settingsTextView=0x7f09005d;
+        public static final int settingsTextView=0x7f090059;
         public static final int shortcut=0x7f09002c;
         public static final int showCustom=0x7f090009;
         public static final int showHome=0x7f09000a;
@@ -919,9 +923,9 @@ containing a value of this type.
         public static final int abc_search_view=0x7f030017;
         public static final int controller=0x7f030018;
         public static final int drawer_header=0x7f030019;
-        public static final int drawer_row=0x7f03001a;
+        public static final int drawer_seekbar_row=0x7f03001a;
         public static final int drawer_settings_dialog=0x7f03001b;
-        public static final int drawer_settings_row=0x7f03001c;
+        public static final int drawer_toggle_row=0x7f03001c;
         public static final int main=0x7f03001d;
         public static final int support_simple_spinner_dropdown_item=0x7f03001e;
     }

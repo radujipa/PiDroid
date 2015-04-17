@@ -28,9 +28,10 @@
         <item>look up</item>
         <item>up</item>
     </string-array>
-    <!-- From: file:/Users/radu/Projects/PiDroid/PiDroid/PiDroid/src/main/res/values/strings.xml -->
+    <!-- From: file:/Users/radu/Projects/PiDroid/PiDroid/PiDroid/src/main/res/values/drawer_controls.xml -->
     <eat-comment/>
-    <string-array name="drawer_items_list">
+    <string-array name="drawer_controls">
+
         <!-- header item -->
         <item>0,CONTROLS</item>
 
@@ -43,29 +44,13 @@
         <!-- row item -->
         <item>1,Joysticks</item>
 
-        <!-- header -->
-        <item>0,SETTINGS</item>
-
-        <!-- settings row item -->
-        <item>2,Maximum tilt angle</item>
-
-        <!-- settings row item -->
-        <item>2,Acceleration time</item>
-
-        <!-- settings row item -->
-        <item>2,Deceleration time</item>
-
-        <!-- settings row item -->
-        <item>2,Touch responsiveness</item>
+    </string-array>
+    <!-- From: file:/Users/radu/Projects/PiDroid/PiDroid/PiDroid/src/main/res/values/drawer_options.xml -->
+    <eat-comment/>
+    <string-array name="drawer_options">
 
         <!-- header -->
-        <item>0,ROVER</item>
-
-        <!-- settings row item -->
-        <item>2,Turn sensitivity</item>
-
-        <!-- header -->
-        <item>0,MISC</item>
+        <item>0,MORE OPTIONS</item>
 
         <!-- row item -->
         <item>1,Camera stabilisation</item>
@@ -78,6 +63,49 @@
 
         <!-- row item -->
         <item>1,Tutorials</item>
+
+    </string-array>
+    <!-- From: file:/Users/radu/Projects/PiDroid/PiDroid/PiDroid/src/main/res/values/drawer_robot_settings.xml -->
+    <eat-comment/>
+    <string-array name="drawer_robot_settings">
+
+        <!-- header -->
+        <item>0,ROBOT SETTINGS</item>
+
+        <!-- settings row item -->
+        <item>2,Turn sensitivity</item>
+
+    </string-array>
+    <!-- From: file:/Users/radu/Projects/PiDroid/PiDroid/PiDroid/src/main/res/values/drawer_slider_settings.xml -->
+    <eat-comment/>
+    <string-array name="drawer_slider_settings">
+
+        <!-- header -->
+        <item>0,CONTROLS SETTINGS</item>
+
+        <!-- settings row item -->
+        <item>2,Maximum tilt angle</item>
+
+    </string-array>
+    <!-- From: file:/Users/radu/Projects/PiDroid/PiDroid/PiDroid/src/main/res/values/drawer_touch_settings.xml -->
+    <eat-comment/>
+    <string-array name="drawer_touch_settings">
+
+        <!-- header -->
+        <item>0,CONTROLS SETTINGS</item>
+
+        <!-- settings row item -->
+        <item>2,Maximum tilt angle</item>
+
+        <!-- settings row item -->
+        <item>2,Acceleration time</item>
+
+        <!-- settings row item -->
+        <item>2,Deceleration time</item>
+
+        <!-- settings row item -->
+        <item>2,Touch response</item>
+
     </string-array>
     <!-- From: file:/Users/radu/Projects/PiDroid/PiDroid/PiDroid/src/main/res/values/voice_commands.xml -->
     <eat-comment/>
@@ -90,16 +118,6 @@
         <item>accelerate</item>
         <item>start</item>
     </string-array>
-    <!-- From: file:/Users/radu/Projects/PiDroid/PiDroid/PiDroid/src/main/res/values/strings.xml -->
-    <eat-comment/>
-    <string-array name="object_names">
-        <item>Triangle</item>
-        <item>Square</item>
-        <item>Pentagon</item>
-        <item>Star</item>
-    </string-array>
-    <!-- From: file:/Users/radu/Projects/PiDroid/PiDroid/PiDroid/src/main/res/values/voice_commands.xml -->
-    <eat-comment/>
     <string-array name="object_recognition_commands">
         <item>learn</item>
         <item>learn this item</item>

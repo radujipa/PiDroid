@@ -61,7 +61,7 @@ public class GyroscopeControls implements SensorsManager.TiltListener {
 
         this.tiltAngle = tiltAngle;
         notifyRobot();
-        Log.d("GyroscopeControls:", "tiltControls(): tiltAngle = " + tiltAngle);
+        Log.d("GyroscopeControls", "tiltControls(): tiltAngle = " + tiltAngle);
     } // onTilt
 
 } // GyroscopeControls

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Navigation Drawer Items -->
+    <string-array name="drawer_robot_settings">
+
+        <!-- header -->
+        <item>0,ROBOT SETTINGS</item>
+
+        <!-- settings row item -->
+        <item>2,Turn sensitivity</item>
+
+    </string-array>
+
+</resources>

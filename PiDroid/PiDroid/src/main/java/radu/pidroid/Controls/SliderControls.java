@@ -69,7 +69,8 @@ public class SliderControls implements SeekBar.OnSeekBarChangeListener {
                 break;
 
             default:
-                Log.e("onProgressChanged():", "fell through default case!");
+                Log.e("SliderControls", "onProgressChanged(): fell through default case!");
+                return;
         } // switch
 
         this.progress = progress;

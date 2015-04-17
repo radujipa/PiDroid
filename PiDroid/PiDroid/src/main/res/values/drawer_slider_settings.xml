@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Navigation Drawer Items -->
+    <string-array name="drawer_slider_settings">
+
+        <!-- header -->
+        <item>0,CONTROLS SETTINGS</item>
+
+        <!-- settings row item -->
+        <item>2,Maximum tilt angle</item>
+
+    </string-array>
+
+</resources>
